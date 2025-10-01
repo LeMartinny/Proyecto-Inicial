@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-^pkwfcs=i5)kt4qy-eec2m6a3p_ko@dzfbfmog50lrmww4+ept
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Para desarrollo local
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+# Si vas a poner un dominio real (producción), agrega el dominio:
+# ALLOWED_HOSTS = ['midominio.com', 'www.midominio.com']
 
 # Application definition
 
@@ -59,7 +62,7 @@ ROOT_URLCONF = 'ProgresaTallaLibre.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"], #para templates globales
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

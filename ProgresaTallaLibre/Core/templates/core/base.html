@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progesa Talla Libre</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5b73e8 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .sphere1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.2);
+            top: 10%;
+            right: 15%;
+            animation-delay: 0s;
+        }
+        
+        .sphere2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(138, 43, 226, 0.3);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: 2s;
+        }
+        
+        .sphere3 {
+            width: 250px;
+            height: 250px;
+            background: rgba(100, 149, 237, 0.25);
+            top: 50%;
+            right: 5%;
+            animation-delay: 4s;
+        }
+        
+        .sphere4 {
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.15);
+            bottom: 30%;
+            left: 40%;
+            animation-delay: 3s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) scale(1.05);
+            }
+        }
+        
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .main-title {
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+        }
+        
+        .cta-button {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 16px 48px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        nav a {
+            transition: opacity 0.3s ease;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-gradient">
+        <!-- Animated spheres -->
+        <div class="sphere sphere1"></div>
+        <div class="sphere sphere2"></div>
+        <div class="sphere sphere3"></div>
+        <div class="sphere sphere4"></div>
+        
+        <!-- Navbar -->
+        <nav class="relative z-10 flex items-center justify-between p-6 text-white">
+            <div class="logo-container">
+                <img src="ruta/a/tu/logo.png" alt="Logo Progesa">
+            </div>
+            <div class="flex gap-8 text-lg font-semibold">
+                <a href="#quienes-somos">¿QUIENES SOMOS?</a>
+                <a href="#programas">PROGRAMAS</a>
+                <a href="#perfil">TU PERFIL</a>
+            </div>
+        </nav>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 flex flex-col items-center justify-center text-center text-white px-6" style="min-height: calc(100vh - 100px);">
+            <h1 class="main-title mb-8">
+                Progesa<br>
+                Talla Libre
+            </h1>
+            
+            <button class="cta-button mt-8">
+                Inscríbete
+            </button>
+        </div>
+    </div>
+    
+    <!-- Rest of content -->
+    <div class="container mx-auto p-8">
+        <div id="quienes-somos" class="my-16">
+            <h2 class="text-4xl font-bold mb-4">¿Quiénes Somos?</h2>
+            <p class="text-lg text-gray-700">Contenido de tu sección...</p>
+        </div>
+        
+        <div id="programas" class="my-16">
+            <h2 class="text-4xl font-bold mb-4">Programas</h2>
+            <p class="text-lg text-gray-700">Contenido de programas...</p>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        &copy; 2025 Progesa Talla Libre
+    </footer>
+</body>
+</html>
