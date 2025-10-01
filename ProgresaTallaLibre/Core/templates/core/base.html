@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -103,6 +104,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
         
         .cta-button:hover {
@@ -135,8 +138,8 @@
             </div>
             <div class="flex gap-8 text-lg font-semibold">
                 <a href="#quienes-somos">¿QUIENES SOMOS?</a>
-                <a href="#programas">PROGRAMAS</a>
-                <a href="#perfil">TU PERFIL</a>
+                <a href="{% url 'lista_cursos' %}">PROGRAMAS</a>
+                <a href="{% url 'login' %}">TU PERFIL</a>
             </div>
         </nav>
         
@@ -147,9 +150,9 @@
                 Talla Libre
             </h1>
             
-            <button class="cta-button mt-8">
+            <a href="{% url 'login' %}" class="cta-button mt-8 inline-block text-center">
                 Inscríbete
-            </button>
+            </a>
         </div>
     </div>
     
