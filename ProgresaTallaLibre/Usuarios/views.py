@@ -40,19 +40,13 @@ def login_view(request):
 
 def registro_view(request):
     if request.method == 'POST':
-        # Verificar si es una petición AJAX
-        if request.headers.get('Content-Type') == 'application/json':
-            try:
-                data = json.loads(request.body)
-                username = data.get('username', '').strip()
-                password1 = data.get('password1', '')
-                password2 = data.get('password2', '')
-            except json.JSONDecodeError:
-                return JsonResponse({'success': False, 'error': 'Datos inválidos'})
-        else:
-            username = request.POST.get('username', '').strip()
-            password1 = request.POST.get('password1', '')
-            password2 = request.POST.get('password2', '')
+        try:
+            data = json.loads(request.body)
+            username = data.get('username', '').strip()
+            password1 = data.get('password1', '')
+            password2 = data.get('password2', '')
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Datos inválidos'})
         
         # Crear formulario con los datos
         form_data = {
@@ -69,24 +63,16 @@ def registro_view(request):
             authenticated_user = authenticate(request, username=username, password=password)
             if authenticated_user is not None:
                 login(request, authenticated_user)
-                # Si es AJAX, devolver JSON
-                if request.headers.get('Content-Type') == 'application/json':
-                    return JsonResponse({'success': True, 'redirect': '/usuarios/perfil/'})
-                return redirect('perfil')
+                return JsonResponse({'success': True, 'redirect': '/usuarios/perfil/'})
         
-        # Si hay errores
-        if request.headers.get('Content-Type') == 'application/json':
-            # Devolver errores en JSON
-            errors = {}
-            for field, field_errors in form.errors.items():
-                errors[field] = list(field_errors)
-            return JsonResponse({'success': False, 'errors': errors})
-        
-        # Si no es AJAX, mostrar errores en template
-        return render(request, 'usuarios/registro.html', {'form': form})
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'usuarios/registro.html', {'form': form})
+        # Si hay errores, devolver errores en JSON
+        errors = {}
+        for field, field_errors in form.errors.items():
+            errors[field] = list(field_errors)
+        return JsonResponse({'success': False, 'errors': errors})
+    
+    # Solo aceptar peticiones POST con JSON
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
 @login_required
 def perfil_view(request):
