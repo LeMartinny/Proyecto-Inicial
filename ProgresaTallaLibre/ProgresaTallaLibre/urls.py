@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from Core import views as core_views
 
 urlpatterns = [
@@ -25,3 +27,7 @@ urlpatterns = [
     path('usuarios/', include('Usuarios.urls')),  # URLs de la app Usuarios
     path('programas/', include('Programas_Cursos.urls')),  # URLs de la app Programas_Cursos
 ]
+
+# Configuración para servir archivos estáticos en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

@@ -13,63 +13,12 @@
         }
         
         .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5b73e8 100%);
+            background:
+                linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)),
+                url("{% static 'core/img/fondo1.png' %}") center/cover no-repeat fixed;
             min-height: 100vh;
             position: relative;
             overflow: hidden;
-        }
-        
-        .sphere {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(40px);
-            opacity: 0.3;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .sphere1 {
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.2);
-            top: 10%;
-            right: 15%;
-            animation-delay: 0s;
-        }
-        
-        .sphere2 {
-            width: 400px;
-            height: 400px;
-            background: rgba(138, 43, 226, 0.3);
-            bottom: 10%;
-            left: 10%;
-            animation-delay: 2s;
-        }
-        
-        .sphere3 {
-            width: 250px;
-            height: 250px;
-            background: rgba(100, 149, 237, 0.25);
-            top: 50%;
-            right: 5%;
-            animation-delay: 4s;
-        }
-        
-        .sphere4 {
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.15);
-            bottom: 30%;
-            left: 40%;
-            animation-delay: 3s;
-        }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-30px) scale(1.05);
-            }
         }
         
         .logo-container {
@@ -94,24 +43,37 @@
         }
         
         .cta-button {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: #0a0a0a;
+            border: 2px solid #ffffff;
             padding: 16px 48px;
-            border-radius: 50px;
-            color: white;
+            border-radius: 9999px;
+            color: #ffffff;
             font-size: 1.25rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
             text-decoration: none;
             display: inline-block;
         }
         
         .cta-button:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: #111111;
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .title-primary {
+            color: #cfe1ff; 
+            text-decoration: underline;
+            text-decoration-thickness: 8px;
+            text-underline-offset: 6px;
+        }
+
+        .title-secondary {
+            color: #0b0b0b;
+            text-decoration: underline;
+            text-decoration-thickness: 10px;
+            text-underline-offset: 10px;
         }
         
         nav a {
@@ -121,20 +83,149 @@
         nav a:hover {
             opacity: 0.8;
         }
+
+        /* Estilos para la sección Quiénes Somos */
+        .quienes-somos-section {
+            background-color: #000000;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quienes-somos-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-decoration: underline;
+            text-decoration-color: #6366f1;
+            text-decoration-thickness: 4px;
+            text-underline-offset: 12px;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .title-with-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .title-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex-shrink: 0;
+            order: -1;
+        }
+
+        .title-logo:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.4);
+        }
+
+        .title-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .title-with-logo {
+                gap: 1rem;
+            }
+            
+            .title-logo {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title-with-logo {
+                gap: 0.8rem;
+            }
+            
+            .title-logo {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        .quienes-somos-image {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(99, 102, 241, 0.4);
+            aspect-ratio: 16/9; 
+            min-height: 400px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quienes-somos-image:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 100px rgba(99, 102, 241, 0.5);
+        }
+
+        .quienes-somos-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .quienes-somos-text {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quienes-somos-text:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mejoras responsivas */
+        @media (max-width: 1024px) {
+            .quienes-somos-text {
+                padding: 2rem;
+                font-size: 1rem;
+            }
+            
+            .quienes-somos-image {
+                min-height: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .quienes-somos-text {
+                padding: 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            .quienes-somos-image {
+                min-height: 300px;
+            }
+        }
     </style>
 </head>
-<body>
+<body{% if messages %} data-has-messages="true"{% endif %}>
     <div class="hero-gradient">
-        <!-- Animated spheres -->
-        <div class="sphere sphere1"></div>
-        <div class="sphere sphere2"></div>
-        <div class="sphere sphere3"></div>
-        <div class="sphere sphere4"></div>
-        
         <!-- Navbar -->
-        <nav class="relative z-10 flex items-center justify-between p-6 text-white">
+        <nav class="relative z-10 flex items-center justify-between p-6 text-white bg-black">
             <div class="logo-container">
-                <img src="ruta/a/tu/logo.png" alt="Logo Progresa">
+                <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
             </div>
             <div class="flex gap-8 text-lg font-semibold">
                 <a href="#quienes-somos">¿QUIENES SOMOS?</a>
@@ -146,8 +237,8 @@
        <!-- Hero Content -->
        <div class="relative z-10 flex flex-col items-center justify-center text-center text-white px-6" style="min-height: calc(100vh - 100px);">
         <h1 class="main-title mb-8">
-            <span class="block">Progresa</span>
-            <span class="block mt-6 opacity-95">Libre</span>
+            <span class="block title-primary">Progresa</span>
+            <span class="block mt-6 opacity-95 title-secondary">Talla Libre</span>
         </h1>
         
         <a href="#" class="cta-button mt-8 inline-block text-center js-open-auth">
@@ -388,20 +479,57 @@
         });
 
         // Abrir modal automáticamente si hay mensajes de error
-        {% if messages %}
-        document.addEventListener('DOMContentLoaded', function() {
-            openModal('login');
-        });
-        {% endif %}
+        if (document.body.dataset.hasMessages === 'true') {
+            document.addEventListener('DOMContentLoaded', function() {
+                openModal('login');
+            });
+        }
     })();
     </script>
-    <!-- Rest of content -->
-    <div class="container mx-auto p-8">
-        <div id="quienes-somos" class="my-16">
-            <h2 class="text-4xl font-bold mb-4">¿Quiénes Somos?</h2>
-            <p class="text-lg text-gray-700">Contenido de tu sección...</p>
+
+    <!-- Sección Quiénes Somos -->
+    <div id="quienes-somos" class="quienes-somos-section">
+        <div class="container mx-auto px-6 py-20">
+            <!-- Título con Logo -->
+            <div class="title-with-logo mb-16">
+                <div class="title-logo">
+                    <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
+                </div>
+                <h2 class="quienes-somos-title text-white">
+                    ¿QUIENES SOMOS?
+                </h2>
+            </div>
+
+            <!-- Contenido principal con imagen y texto -->
+            <div class="max-w-7xl mx-auto">
+                <!-- Layout responsivo mejorado -->
+                <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+                    <!-- Columna de imagen (izquierda en desktop) -->
+                    <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
+                        <div class="quienes-somos-image max-w-lg w-full">
+                            <!-- AQUÍ COLOCA TU PNG -->
+                            <img src="{% static 'core/img/tu-imagen-3d.png' %}" alt="Imagen 3D Progresa Libre">
+                        </div>
+                    </div>
+
+                    <!-- Columna de texto (derecha en desktop) -->
+                    <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
+                        <div class="quienes-somos-text max-w-lg w-full">
+                            <p class="mb-6">
+                                Somos una startup iniciada por estudiantes de la USM, unidos por la convicción de que la educación puede cambiar vidas. Creemos en el poder del conocimiento como herramienta de transformación y queremos derribar las barreras que impiden a muchos jóvenes acceder a formación financiera y en desarrollo sustentable de calidad.
+                            </p>
+                            <p>
+                                Nuestro objetivo es empoderar a las personas entregándoles experiencias de aprendizaje dinámicas, accesibles y gratuitas, que despierten la curiosidad y fomenten decisiones conscientes. Buscamos construir una comunidad que aprenda, crezca y comparta logros, porque estamos convencidos de que juntos podemos forjar un futuro más justo, responsable y lleno de oportunidades.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        
+    </div>
+    
+    <!-- Resto del contenido -->
+    <div class="container mx-auto p-8">
         <div id="programas" class="my-16">
             <h2 class="text-4xl font-bold mb-4">Programas</h2>
             <p class="text-lg text-gray-700">Un proyecto universitario cuya finalidad es ofrecer educación principalmente financiera de calidad sin fines de lucro.</p>
@@ -410,7 +538,7 @@
     
     <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        &copy; 2025 Progesa Talla Libre
+        &copy; 2025 Progesa Libre
     </footer>
 </body>
 </html>
