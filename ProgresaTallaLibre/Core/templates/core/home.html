@@ -2,515 +2,143 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progresa Libre</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            margin: 0;
-            overflow-x: hidden;
-        }
-        
-        .hero-gradient {
-            background:
-                linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.15)),
-                url("{% static 'core/img/fondo1.png' %}") center/cover no-repeat fixed;
-            min-height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .logo-container {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .logo-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        .main-title {
-            font-size: clamp(4rem, 12vw, 10rem);
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: -0.02em;
-        }
-        
-        .cta-button {
-            background: #0a0a0a;
-            border: 2px solid #ffffff;
-            padding: 16px 48px;
-            border-radius: 9999px;
-            color: #ffffff;
-            font-size: 1.25rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .cta-button:hover {
-            background: #111111;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progresa Libre</title>
 
-        .title-primary {
-            color: #cfe1ff; 
-            text-decoration: underline;
-            text-decoration-thickness: 8px;
-            text-underline-offset: 6px;
-        }
-
-        .title-secondary {
-            color: #0b0b0b;
-            text-decoration: underline;
-            text-decoration-thickness: 10px;
-            text-underline-offset: 10px;
-        }
-        
-        nav a {
-            transition: opacity 0.3s ease;
-        }
-        
-        nav a:hover {
-            opacity: 0.8;
-        }
-
-        /* Estilos para la sección Quiénes Somos */
-        .quienes-somos-section {
-            background-color: #000000;
-            min-height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .quienes-somos-title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 900;
-            letter-spacing: 0.05em;
-            text-decoration: underline;
-            text-decoration-color: #6366f1;
-            text-decoration-thickness: 4px;
-            text-underline-offset: 12px;
-            margin: 0;
-            line-height: 1.1;
-        }
-
-        .title-with-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            position: relative;
-        }
-
-        .title-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            flex-shrink: 0;
-            order: -1;
-        }
-
-        .title-logo:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.4);
-        }
-
-        .title-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 16px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .title-with-logo {
-                gap: 1rem;
-            }
-            
-            .title-logo {
-                width: 50px;
-                height: 50px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .title-with-logo {
-                gap: 0.8rem;
-            }
-            
-            .title-logo {
-                width: 45px;
-                height: 45px;
-            }
-        }
-
-        .quienes-somos-image {
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 25px 80px rgba(99, 102, 241, 0.4);
-            aspect-ratio: 16/9; 
-            min-height: 400px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .quienes-somos-image:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 35px 100px rgba(99, 102, 241, 0.5);
-        }
-
-        .quienes-somos-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .quienes-somos-text {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
-            border-radius: 20px;
-            padding: 3rem;
-            line-height: 1.8;
-            font-size: 1.1rem;
-            color: #1a1a1a;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .quienes-somos-text:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Mejoras responsivas */
-        @media (max-width: 1024px) {
-            .quienes-somos-text {
-                padding: 2rem;
-                font-size: 1rem;
-            }
-            
-            .quienes-somos-image {
-                min-height: 350px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .quienes-somos-text {
-                padding: 1.5rem;
-                font-size: 0.95rem;
-            }
-            
-            .quienes-somos-image {
-                min-height: 300px;
-            }
-        }
-    </style>
+  <!-- Fuentes-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body{% if messages %} data-has-messages="true"{% endif %}>
-    <div class="hero-gradient">
-        <!-- Navbar -->
-        <nav class="relative z-10 flex items-center justify-between p-6 text-white bg-black">
-            <div class="logo-container">
-                <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
-            </div>
-            <div class="flex gap-8 text-lg font-semibold">
+
+  <!-- HomePage -->
+    <div class="main-container">
+        <div class="left-section"></div>
+        <div class="divider"></div>
+        <div class="right-section">
+        
+            <nav>
+                <div class="separador">
                 <a href="#quienes-somos">¿QUIENES SOMOS?</a>
                 <a href="{% url 'lista_cursos' %}">PROGRAMAS</a>
-                <a href="#" class="js-open-auth">TU PERFIL</a>
-            </div>
-        </nav>
-        
-       <!-- Hero Content -->
-       <div class="relative z-10 flex flex-col items-center justify-center text-center text-white px-6" style="min-height: calc(100vh - 100px);">
-        <h1 class="main-title mb-8">
-            <span class="block title-primary">Progresa</span>
-            <span class="block mt-6 opacity-95 title-secondary">Talla Libre</span>
-        </h1>
-        
-        <a href="#" class="cta-button mt-8 inline-block text-center js-open-auth">
-            Inscríbete
-        </a>
-    </div>
-</div>
-    
-    <!-- Auth Modal Overlay -->
-    <div id="auth-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
-        <div class="absolute inset-0 bg-black/60" data-close-auth></div>
-        <div class="relative z-10 w-full max-w-xl mx-4">
-            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-                <div class="flex border-b">
-                    <button id="tab-login" class="flex-1 py-3 font-semibold text-center border-b-2 border-transparent active:text-indigo-600">Iniciar sesión</button>
-                    <button id="tab-signup" class="flex-1 py-3 font-semibold text-center border-b-2 border-transparent">Crear cuenta</button>
+                <a href="#auth-modal" class="js-open-auth">TU PERFIL</a>
                 </div>
-                <div class="p-6">
-                    <!-- Login Form -->
-                    <form id="panel-login" class="space-y-4">
-                        {% csrf_token %}
-                        <div id="login-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        <div>
-                            <label for="login-username" class="block text-sm font-medium text-gray-700">Usuario</label>
-                            <input id="login-username" name="username" type="text" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                        </div>
-                        <div>
-                            <label for="login-password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                            <input id="login-password" name="password" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                        </div>
-                        <div class="flex items-center justify-between pt-2">
-                            <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Entrar</button>
-                            <button type="button" class="text-gray-500 hover:text-gray-700" data-close-auth>Cerrar</button>
-                        </div>
-                    </form>
+            </nav>
 
-                    <!-- Signup Form -->
-                    <form id="panel-signup" class="space-y-4 hidden">
-                        {% csrf_token %}
-                        <div id="signup-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
-                        <div>
-                            <label for="signup-username" class="block text-sm font-medium text-gray-700">Usuario</label>
-                            <input id="signup-username" name="username" type="text" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                            <div id="signup-username-error" class="text-red-600 text-sm mt-1 hidden"></div>
+            <!-- Bloque de títulos: todo el bloque está alineado a la izquierda del contenedor -->
+            <header class="title-block">
+                <!-- fila 1: primario a la izquierda -->
+                <div class="title-row title-row-primary">
+                <span class="title-primary">Progresa</span>
+                </div>
+
+                <!-- fila 2: secundario a la derecha dentro del mismo ancho -->
+                <div class="title-row title-row-secondary">
+                <span class="title-secondary">Libre</span>
+                </div>
+            
+                <!-- Botón de inscripción -->
+                <div class="button-box">
+                        <a href="#" class="cta-button js-open-auth">Inscríbete</a>
+                </div>
+            </header>
+            <!-- Logo en la esquina inferior derecha -->
+            <div class="logo-bottom">
+                <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
+            </div>     
+            
+        <!-- Auth Modal Overlay -->
+        <div id="auth-modal" class="login-overlay hidden">
+            <div class="absolute inset-0 bg-black/60 z-10" data-close-auth></div>
+                <div class="marco-falso">
+                    <div class="marco-tab">
+                        <button id="tab-login">Iniciar sesión</button>
+                        <button id="tab-signup">Crear cuenta</button>
+                    </div>
+
+                        <!-- Login Form -->
+                        <div class="p-6">
+                            <form id="panel-login" class="space-y-4">
+                                {% csrf_token %}
+                                <div id="login-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <div>
+                                    <label for="login-username" class="block text-sm font-medium text-gray-700">Usuario</label>
+                                    <input id="login-username" name="username" type="text" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+                                </div>
+                                <div>
+                                    <label for="login-password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                                    <input id="login-password" name="password" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+                                </div>
+                                <div class="flex items-center justify-between pt-2">
+                                    <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Entrar</button>
+                                    <button type="button" class="text-gray-500 hover:text-gray-700" data-close-auth>Cerrar</button>
+                                </div>
+                            </form>
+                            <!-- Signup Form -->
+                            <form id="panel-signup" class="space-y-4 hidden">
+                                {% csrf_token %}
+                                <div id="signup-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                                <div>
+                                    <label for="signup-username" class="block text-sm font-medium text-gray-700">Usuario</label>
+                                    <input id="signup-username" name="username" type="text" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+                                    <div id="signup-username-error" class="text-red-600 text-sm mt-1 hidden"></div>
+                                </div>
+                                <div>
+                                    <label for="signup-password1" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                                    <input id="signup-password1" name="password1" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+                                    <div id="signup-password1-error" class="text-red-600 text-sm mt-1 hidden"></div>
+                                </div>
+                                <div>
+                                    <label for="signup-password2" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
+                                    <input id="signup-password2" name="password2" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+                                    <div id="signup-password2-error" class="text-red-600 text-sm mt-1 hidden"></div>
+                                </div>
+                                <div class="flex items-center justify-between pt-2">
+                                    <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Registrarme</button>
+                                    <button type="button" class="text-gray-500 hover:text-gray-700" data-close-auth>Cerrar</button>
+                                </div>
+                            </form>
                         </div>
-                        <div>
-                            <label for="signup-password1" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                            <input id="signup-password1" name="password1" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                            <div id="signup-password1-error" class="text-red-600 text-sm mt-1 hidden"></div>
-                        </div>
-                        <div>
-                            <label for="signup-password2" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
-                            <input id="signup-password2" name="password2" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                            <div id="signup-password2-error" class="text-red-600 text-sm mt-1 hidden"></div>
-                        </div>
-                        <div class="flex items-center justify-between pt-2">
-                            <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Registrarme</button>
-                            <button type="button" class="text-gray-500 hover:text-gray-700" data-close-auth>Cerrar</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-    (function() {
-        const modal = document.getElementById('auth-modal');
-        const openers = document.querySelectorAll('.js-open-auth');
-        const closers = document.querySelectorAll('[data-close-auth]');
-        const tabLogin = document.getElementById('tab-login');
-        const tabSignup = document.getElementById('tab-signup');
-        const panelLogin = document.getElementById('panel-login');
-        const panelSignup = document.getElementById('panel-signup');
-
-        function openModal(defaultTab) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            if (defaultTab === 'signup') {
-                showSignup();
-            } else {
-                showLogin();
-            }
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-
-        function showLogin() {
-            panelLogin.classList.remove('hidden');
-            panelSignup.classList.add('hidden');
-            tabLogin.classList.add('text-indigo-600', 'border-indigo-600');
-            tabSignup.classList.remove('text-indigo-600', 'border-indigo-600');
-        }
-
-        function showSignup() {
-            panelLogin.classList.add('hidden');
-            panelSignup.classList.remove('hidden');
-            tabSignup.classList.add('text-indigo-600', 'border-indigo-600');
-            tabLogin.classList.remove('text-indigo-600', 'border-indigo-600');
-        }
-
-        openers.forEach(el => {
-            el.addEventListener('click', function(e) {
-                e.preventDefault();
-                const defaultTab = this.textContent && this.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login';
-                openModal(defaultTab);
-            });
-        });
-
-        closers.forEach(el => el.addEventListener('click', closeModal));
-
-        tabLogin.addEventListener('click', showLogin);
-        tabSignup.addEventListener('click', showSignup);
-
-        // Manejar envío del formulario de login con AJAX
-        panelLogin.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            const errorDiv = document.getElementById('login-error');
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            
-            // Ocultar error anterior
-            errorDiv.classList.add('hidden');
-            
-            try {
-                const response = await fetch('{% url "login" %}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Login exitoso, redirigir
-                    window.location.href = data.redirect;
-                } else {
-                    // Mostrar error
-                    errorDiv.textContent = data.error;
-                    errorDiv.classList.remove('hidden');
-                }
-            } catch (error) {
-                errorDiv.textContent = 'Error de conexión. Inténtalo nuevamente.';
-                errorDiv.classList.remove('hidden');
-            }
-        });
-
-        // Manejar envío del formulario de registro con AJAX
-        panelSignup.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('signup-username').value;
-            const password1 = document.getElementById('signup-password1').value;
-            const password2 = document.getElementById('signup-password2').value;
-            const errorDiv = document.getElementById('signup-error');
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            
-            // Ocultar errores anteriores
-            errorDiv.classList.add('hidden');
-            document.getElementById('signup-username-error').classList.add('hidden');
-            document.getElementById('signup-password1-error').classList.add('hidden');
-            document.getElementById('signup-password2-error').classList.add('hidden');
-            
-            try {
-                const response = await fetch('{% url "registro" %}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password1: password1,
-                        password2: password2
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Registro exitoso, redirigir
-                    window.location.href = data.redirect;
-                } else {
-                    // Mostrar errores
-                    if (data.errors) {
-                        // Errores específicos por campo
-                        if (data.errors.username) {
-                            const usernameError = document.getElementById('signup-username-error');
-                            usernameError.textContent = data.errors.username[0];
-                            usernameError.classList.remove('hidden');
-                        }
-                        if (data.errors.password1) {
-                            const password1Error = document.getElementById('signup-password1-error');
-                            password1Error.textContent = data.errors.password1[0];
-                            password1Error.classList.remove('hidden');
-                        }
-                        if (data.errors.password2) {
-                            const password2Error = document.getElementById('signup-password2-error');
-                            password2Error.textContent = data.errors.password2[0];
-                            password2Error.classList.remove('hidden');
-                        }
-                    } else if (data.error) {
-                        // Error general
-                        errorDiv.textContent = data.error;
-                        errorDiv.classList.remove('hidden');
-                    }
-                }
-            } catch (error) {
-                errorDiv.textContent = 'Error de conexión. Inténtalo nuevamente.';
-                errorDiv.classList.remove('hidden');
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
-
-        // Abrir modal automáticamente si hay mensajes de error
-        if (document.body.dataset.hasMessages === 'true') {
-            document.addEventListener('DOMContentLoaded', function() {
-                openModal('login');
-            });
-        }
-    })();
-    </script>
-
-    <!-- Sección Quiénes Somos -->
-    <div id="quienes-somos" class="quienes-somos-section">
-        <div class="container mx-auto px-6 py-20">
-            <!-- Título con Logo -->
-            <div class="title-with-logo mb-16">
-                <div class="title-logo">
-                    <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
-                </div>
-                <h2 class="quienes-somos-title text-white">
-                    ¿QUIENES SOMOS?
-                </h2>
+<!-- Sección Quiénes Somos -->
+<body id="quienes-somos" class="quienes-somos-section">
+    <div class="container mx-auto px-6 py-20">
+        <!-- Título con Logo -->
+        <div class="title-with-logo mb-16">
+            <div class="title-logo">
+                <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
             </div>
-
-            <!-- Contenido principal con imagen y texto -->
-            <div class="max-w-7xl mx-auto">
-                <!-- Layout responsivo mejorado -->
-                <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
-                    <!-- Columna de imagen (izquierda en desktop) -->
-                    <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
-                        <div class="quienes-somos-image max-w-lg w-full">
-                            <!-- AQUÍ COLOCA TU PNG -->
-                            <img src="{% static 'core/img/tu-imagen-3d.png' %}" alt="Imagen 3D Progresa Libre">
-                        </div>
+            <h2 class="quienes-somos-title text-white">
+                ¿QUIENES SOMOS?
+            </h2>
+        </div>  
+        <!-- Contenido principal con imagen y texto -->
+        <div class="max-w-7xl mx-auto">
+            <!-- Layout responsivo mejorado -->
+            <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+                <!-- Columna de imagen (izquierda en desktop) -->
+                <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
+                    <div class="quienes-somos-image max-w-lg w-full">
+                        <!-- AQUÍ COLOCA TU PNG -->
+                        <img src="{% static 'core/img/tu-imagen-3d.png' %}" alt="Imagen del Grupo">
                     </div>
+                </div>
 
                     <!-- Columna de texto (derecha en desktop) -->
                     <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
@@ -527,18 +155,187 @@
             </div>
         </div>
     </div>
-    
-    <!-- Resto del contenido -->
-    <div class="container mx-auto p-8">
-        <div id="programas" class="my-16">
-            <h2 class="text-4xl font-bold mb-4">Programas</h2>
-            <p class="text-lg text-gray-700">Un proyecto universitario cuya finalidad es ofrecer educación principalmente financiera de calidad sin fines de lucro.</p>
-        </div>
-    </div>
-    
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        &copy; 2025 Progesa Libre
-    </footer>
-</body>
+        
+
+
+        <script>
+        (function() {
+            const modal = document.getElementById('auth-modal');
+            const openers = document.querySelectorAll('.js-open-auth');
+            const closers = document.querySelectorAll('[data-close-auth]');
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const panelLogin = document.getElementById('panel-login');
+            const panelSignup = document.getElementById('panel-signup');
+
+            function openModal(defaultTab) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                if (defaultTab === 'signup') {
+                    showSignup();
+                } else {
+                    showLogin();
+                }
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+
+            function showLogin() {
+                panelLogin.classList.remove('hidden');
+                panelSignup.classList.add('hidden');
+                tabLogin.classList.add('text-indigo-600', 'border-indigo-600');
+                tabSignup.classList.remove('text-indigo-600', 'border-indigo-600');
+            }
+
+            function showSignup() {
+                panelLogin.classList.add('hidden');
+                panelSignup.classList.remove('hidden');
+                tabSignup.classList.add('text-indigo-600', 'border-indigo-600');
+                tabLogin.classList.remove('text-indigo-600', 'border-indigo-600');
+            }
+
+            openers.forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const defaultTab = this.textContent && this.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login';
+                    openModal(defaultTab);
+                });
+            });
+
+            closers.forEach(el => el.addEventListener('click', closeModal));
+
+            tabLogin.addEventListener('click', showLogin);
+            tabSignup.addEventListener('click', showSignup);
+
+            // Manejar envío del formulario de login con AJAX
+            panelLogin.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('login-username').value;
+                const password = document.getElementById('login-password').value;
+                const errorDiv = document.getElementById('login-error');
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                // Ocultar error anterior
+                errorDiv.classList.add('hidden');
+                
+                try {
+                    const response = await fetch('{% url "login" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Login exitoso, redirigir
+                        window.location.href = data.redirect;
+                    } else {
+                        // Mostrar error
+                        errorDiv.textContent = data.error;
+                        errorDiv.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    errorDiv.textContent = 'Error de conexión. Inténtalo nuevamente.';
+                    errorDiv.classList.remove('hidden');
+                }
+            });
+
+            // Manejar envío del formulario de registro con AJAX
+            panelSignup.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('signup-username').value;
+                const password1 = document.getElementById('signup-password1').value;
+                const password2 = document.getElementById('signup-password2').value;
+                const errorDiv = document.getElementById('signup-error');
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                // Ocultar errores anteriores
+                errorDiv.classList.add('hidden');
+                document.getElementById('signup-username-error').classList.add('hidden');
+                document.getElementById('signup-password1-error').classList.add('hidden');
+                document.getElementById('signup-password2-error').classList.add('hidden');
+                
+                try {
+                    const response = await fetch('{% url "registro" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password1: password1,
+                            password2: password2
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Registro exitoso, redirigir
+                        window.location.href = data.redirect;
+                    } else {
+                        // Mostrar errores
+                        if (data.errors) {
+                            // Errores específicos por campo
+                            if (data.errors.username) {
+                                const usernameError = document.getElementById('signup-username-error');
+                                usernameError.textContent = data.errors.username[0];
+                                usernameError.classList.remove('hidden');
+                            }
+                            if (data.errors.password1) {
+                                const password1Error = document.getElementById('signup-password1-error');
+                                password1Error.textContent = data.errors.password1[0];
+                                password1Error.classList.remove('hidden');
+                            }
+                            if (data.errors.password2) {
+                                const password2Error = document.getElementById('signup-password2-error');
+                                password2Error.textContent = data.errors.password2[0];
+                                password2Error.classList.remove('hidden');
+                            }
+                        } else if (data.error) {
+                            // Error general
+                            errorDiv.textContent = data.error;
+                            errorDiv.classList.remove('hidden');
+                        }
+                    }
+                } catch (error) {
+                    errorDiv.textContent = 'Error de conexión. Inténtalo nuevamente.';
+                    errorDiv.classList.remove('hidden');
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+
+            // Abrir modal automáticamente si hay mensajes de error
+            if (document.body.dataset.hasMessages === 'true') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    openModal('login');
+                });
+            }
+        })();
+        </script>
+
+        <!-- Footer -->
+<footer class="bg-gray-800 text-white text-center p-6 mt-16">
+    &copy; 2025 Progesa Libre
+</footer> 
 </html>

@@ -1,0 +1,340 @@
+/* === GENERAL ADAPTATIVO === */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+   /* outline: 1px solid red; /* para ver qué elemento genera el borde and debug */
+}
+
+html, body {
+    width: 100%;
+    height: 100%; 
+}
+
+/* Contenedores */
+.main-container{
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden; /* evita scroll horizontal */
+}
+
+/* Izquierda: imagen */
+.left-section{
+    flex: 2;
+    background-image: url("../img/libros.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Derecha: fondo + contenido */
+.right-section{
+    flex: 3;
+    background-image: url("../img/background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    align-items: flex-start; /* Empieza desde div pagina izq */
+    padding: clamp(10px, 3vw, 50px);;
+
+    min-height: auto;
+    position: relative;
+    overflow: hidden;
+    padding: 0 5%;
+}
+
+/* --- NAVBAR --- */
+.right-section nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly; 
+    align-items: center;
+    gap: 100px;
+    font-size: clamp(16px, 1.4vw, 32px);
+    margin-top: 25px;
+    background: transparent;
+    color: #fff;
+    text-align: center;
+}
+
+.separador{
+    display: flex;
+    gap: clamp(25px, 6vw, 96px);
+}
+
+.right-section nav a {
+    text-decoration: underline;
+    color: #fff;
+    transition: opacity 0.3s ease;
+}
+
+.right-section nav a:hover {
+  opacity: 0.8;
+}
+
+/* ---------------------
+ BLOQUE DE TITULOS
+ ----------------------*/
+.title-block{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(15px, 1.6vw, 30px); /* separación vertical */
+    width: 100%;
+    text-align: center; 
+    margin: 0;
+}
+
+.title-row{
+    display: flex;
+    width: 100%;
+}
+
+/* Fila del PRIMARIO: izquierda */
+.title-row-primary{
+    justify-content: flex-start;
+    padding-left: 4vw; 
+}
+
+/* Fila del SECUNDARIO: derecha */
+.title-row-secondary{
+    justify-content: flex-end;
+    padding-right: 4vw;
+}
+
+/* Estilos visuales de los textos */
+.title-primary{
+    margin-top: clamp(38px, 8.2vw, 150px);
+    display: inline-block;
+    font-size: clamp(64px, 12.5vw, 256px);
+    line-height: 1;
+    letter-spacing: -0.02rem;
+    color: #000;
+    text-decoration: underline;
+    text-decoration-thickness: 6px;
+    text-underline-offset: 6px;
+    white-space: nowrap; 
+}
+.title-secondary{
+    display: inline-block;
+    font-size: clamp(64px, 12vw, 256px);
+    line-height: 1;
+    letter-spacing: -0.02rem;
+    color: #000;
+    text-decoration: underline;
+    text-decoration-thickness: 6px;
+    text-underline-offset: 6px;
+    white-space: nowrap; 
+}
+
+/* Botón */
+.button-box{
+        gap:0;
+        padding:0;
+}
+
+.cta-button.js-open-auth {
+    display: inline-block;
+    align-self: center;
+    background: #0a0a0a;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    margin-top: clamp(30px, 4.5vw, 100px);
+    padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1.2rem, 2vw, 3rem);
+    font-size: clamp(20px, 2vw, 80px);
+    border-radius: 50px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    text-decoration: none;
+}
+
+.cta-button:hover {
+    background: #111111;
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+}
+.logo-bottom {
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+    width: clamp(40px, 5vw, 70px);
+}
+
+/* === RESPONSIVE PARA MÓVILES === */
+@media (max-width: 900px) {
+    .main-container { flex-direction: column; }
+    .left-section, .right-section { height: auto; }
+    .title-block { gap: clamp(8px, 2vw, 20px); }
+    .cta-button { font-size: clamp(16px, 3vw, 20px); padding: 0.5rem 1rem; }
+}
+/* ---------------------
+ Login Overlay
+ ----------------------*/
+
+.login-overlay {
+   position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;           
+    height: 100%;
+    z-index: 50;
+    
+    display: flex;          
+    align-items: center;    
+    justify-content: center;
+    
+    background-color: rgba(0, 0, 0, 0.6); 
+}
+
+
+.hidden {
+    display: none;
+}
+.marco-falso{
+    background: rgba(0, 0, 0, 0.6); 
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); 
+    width: 25%;
+    height: 50%;
+    color: white;
+    text-align: center;
+}
+/* ---------------------
+ BLOQUE DE QUIENES SOMOS
+ ----------------------*/
+.quienes-somos-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-decoration-color: #6366f1;
+    text-decoration-thickness: 4px;
+    text-underline-offset: 12px;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.title-with-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.title-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
+    order: -1;
+}
+
+.title-logo:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 20px 50px rgba(99, 102, 241, 0.4);
+}
+
+.title-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+@media (max-width: 768px) {
+    .title-with-logo {
+        gap: 1rem;
+    }
+    
+    .title-logo {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-with-logo {
+        gap: 0.8rem;
+    }
+    
+    .title-logo {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+.quienes-somos-image {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(99, 102, 241, 0.4);
+    aspect-ratio: 16/9; 
+    min-height: 400px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quienes-somos-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 35px 100px rgba(99, 102, 241, 0.5);
+}
+
+.quienes-somos-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.quienes-somos-text {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
+    border-radius: 20px;
+    padding: 3rem;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quienes-somos-text:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1024px) {
+    .quienes-somos-text {
+        padding: 2rem;
+        font-size: 1rem;
+    }
+    
+    .quienes-somos-image {
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .quienes-somos-text {
+        padding: 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .quienes-somos-image {
+        min-height: 300px;
+    }
+}
