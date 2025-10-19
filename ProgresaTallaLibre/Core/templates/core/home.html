@@ -15,7 +15,7 @@
 <body{% if messages %} data-has-messages="true"{% endif %}>
 
   <!-- HomePage -->
-    <div class="main-container">
+    <div id="HomePage" class="main-container">
         <div class="left-section"></div>
         <div class="divider"></div>
         <div class="right-section">
@@ -47,294 +47,305 @@
             </header>
             <!-- Logo en la esquina inferior derecha -->
             <div class="logo-bottom">
-                <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
             </div>     
             
-        <!-- Auth Modal Overlay -->
-        <div id="auth-modal" class="login-overlay hidden">
-            <div class="absolute inset-0 bg-black/60 z-10" data-close-auth></div>
-                <div class="marco-falso">
-                    <div class="marco-tab">
-                        <button id="tab-login">Iniciar sesión</button>
-                        <button id="tab-signup">Crear cuenta</button>
+            <!-- Auth Modal Overlay -->
+            <div id="auth-modal" class="auth-overlay hidden">
+                <div class="auth-backdrop" data-close-auth></div>
+                
+                <div class="auth-container">
+                    <button class="auth-close" data-close-auth>&times;</button>
+
+                    <!-- Login Header -->
+                    <div class="login-header">
+                        <h1 class="auth-title">Iniciar Sesión</h1>
+                        <p class="auth-subtitle">Bienvenido de vuelta</p>
                     </div>
 
-                        <!-- Login Form -->
-                        <div class="p-6">
-                            <form id="panel-login" class="space-y-4">
-                                {% csrf_token %}
-                                <div id="login-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
-                                {% if messages %}
-                                    {% for message in messages %}
-                                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                                            {{ message }}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                                <div>
-                                    <label for="login-username" class="block text-sm font-medium text-gray-700">Usuario</label>
-                                    <input id="login-username" name="username" type="text" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                                </div>
-                                <div>
-                                    <label for="login-password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                                    <input id="login-password" name="password" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                                </div>
-                                <div class="flex items-center justify-between pt-2">
-                                    <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Entrar</button>
-                                    <button type="button" class="text-gray-500 hover:text-gray-700" data-close-auth>Cerrar</button>
-                                </div>
-                            </form>
-                            <!-- Signup Form -->
-                            <form id="panel-signup" class="space-y-4 hidden">
-                                {% csrf_token %}
-                                <div id="signup-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
-                                <div>
-                                    <label for="signup-username" class="block text-sm font-medium text-gray-700">Usuario</label>
-                                    <input id="signup-username" name="username" type="text" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                                    <div id="signup-username-error" class="text-red-600 text-sm mt-1 hidden"></div>
-                                </div>
-                                <div>
-                                    <label for="signup-password1" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                                    <input id="signup-password1" name="password1" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                                    <div id="signup-password1-error" class="text-red-600 text-sm mt-1 hidden"></div>
-                                </div>
-                                <div>
-                                    <label for="signup-password2" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
-                                    <input id="signup-password2" name="password2" type="password" required class="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-                                    <div id="signup-password2-error" class="text-red-600 text-sm mt-1 hidden"></div>
-                                </div>
-                                <div class="flex items-center justify-between pt-2">
-                                    <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Registrarme</button>
-                                    <button type="button" class="text-gray-500 hover:text-gray-700" data-close-auth>Cerrar</button>
-                                </div>
-                            </form>
+                    <!-- Login Form -->
+                    <form class="login-form">
+                        <div class="modern-input-group">
+                            <label for="login-username" class="modern-label">Usuario</label>
+                            <input id="login-username" name="username" type="text" required class="modern-input" placeholder="Ingresa tu usuario" />
                         </div>
+
+                        <div class="modern-input-group">
+                            <label for="login-password" class="modern-label">Contraseña</label>
+                            <input id="login-password" name="password" type="password" required class="modern-input" placeholder="Ingresa tu contraseña" />
+                        </div>
+
+                        <div class="modern-checkbox-group">
+                            <input id="remember" type="checkbox" class="modern-checkbox" name="remember">
+                            <label for="remember" class="modern-checkbox-label">Recordarme</label>
+                        </div>
+
+                        <button type="submit" class="modern-button">Entrar</button>
+
+                        <div class="auth-links">
+                            <p>¿No tienes cuenta? 
+                                <button type="button" class="modern-button">Regístrate aquí</button>
+                            </p>
+                            <p><a href="#HomePage" class="modern-link" data-close-auth>← Volver al inicio</a></p>
+                        </div>
+                    </form>
+
+                    <!-- Register Header -->
+                    <div class="register-header hidden">
+                        <h1 class="auth-title">Registrarse</h1>
+                        <p class="auth-subtitle">Únete a nuestra comunidad</p>
                     </div>
+
+                    <!-- Register Form -->
+                    <form class="register-form hidden">
+                        <div class="modern-input-group">
+                            <label for="signup-username" class="modern-label">Usuario</label>
+                            <input id="signup-username" name="username" type="text" required class="modern-input" placeholder="Elige un usuario" />
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label for="signup-password1" class="modern-label">Contraseña</label>
+                            <input id="signup-password1" name="password1" type="password" required class="modern-input" placeholder="Crea una contraseña" />
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label for="signup-password2" class="modern-label">Confirmar Contraseña</label>
+                            <input id="signup-password2" name="password2" type="password" required class="modern-input" placeholder="Confirma tu contraseña" />
+                        </div>
+
+                        <button type="submit" class="modern-button">Registrarme</button>
+
+                        <div class="auth-links">
+                            <p>¿Ya tienes cuenta? 
+                                <button type="button" class="modern-button">Inicia sesión aquí</button>
+                            </p>
+                            <p><a href="#HomePage" class="modern-link" data-close-auth>← Volver al inicio</a></p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Sección Quiénes Somos -->
-<body id="quienes-somos" class="quienes-somos-section">
-    <div class="container mx-auto px-6 py-20">
-        <!-- Título con Logo -->
-        <div class="title-with-logo mb-16">
-            <div class="title-logo">
-                <img src="{% static 'core/img/Logo_ProgresaLibre.png' %}?v=1" alt="Logo Progresa">
-            </div>
-            <h2 class="quienes-somos-title text-white">
-                ¿QUIENES SOMOS?
-            </h2>
-        </div>  
-        <!-- Contenido principal con imagen y texto -->
-        <div class="max-w-7xl mx-auto">
-            <!-- Layout responsivo mejorado -->
-            <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
-                <!-- Columna de imagen (izquierda en desktop) -->
-                <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
-                    <div class="quienes-somos-image max-w-lg w-full">
-                        <!-- AQUÍ COLOCA TU PNG -->
-                        <img src="{% static 'core/img/tu-imagen-3d.png' %}" alt="Imagen del Grupo">
+<!-- Sección Quienes Somos -->
+<div id="quienes-somos">
+    <!-- Título con Logo -->
+    <div class="title-logo-box">
+        <div class="title-logo">
+            <img src="{% static 'img/logo.png' %}?v=1" alt="Logo Progresa">
+        </div>
+        <h2 class="quienes-somos-title">
+            ¿QUIENES SOMOS?
+        </h2>
+    </div>
+
+    <!-- Contenido principal con imagen y texto -->
+    <div class="contenedor-main2">
+        <!-- Columna izquierda: Media -->
+        <div class="izquierda2">
+            <div class="marcos-container">
+                <div class="marco">
+                    <div class="foto">
+                        <!-- Primera imagen -->
                     </div>
                 </div>
-
-                    <!-- Columna de texto (derecha en desktop) -->
-                    <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
-                        <div class="quienes-somos-text max-w-lg w-full">
-                            <p class="mb-6">
-                                Somos una startup iniciada por estudiantes de la USM, unidos por la convicción de que la educación puede cambiar vidas. Creemos en el poder del conocimiento como herramienta de transformación y queremos derribar las barreras que impiden a muchos jóvenes acceder a formación financiera y en desarrollo sustentable de calidad.
-                            </p>
-                            <p>
-                                Nuestro objetivo es empoderar a las personas entregándoles experiencias de aprendizaje dinámicas, accesibles y gratuitas, que despierten la curiosidad y fomenten decisiones conscientes. Buscamos construir una comunidad que aprenda, crezca y comparta logros, porque estamos convencidos de que juntos podemos forjar un futuro más justo, responsable y lleno de oportunidades.
-                            </p>
-                        </div>
+                <div class="marco">
+                    <div class="foto foto-2">
+                        <!-- Segunda imagen -->
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Columna derecha: Texto -->
+        <div class="derecha2">
+            <div class="quienes-somos-text">
+                <p class="first-paragraph">
+                    Somos una startup iniciada por estudiantes de la USM, unidos por la convicción de que la educación puede cambiar vidas. Creemos en el poder del conocimiento como herramienta de transformación y queremos derribar las barreras que impiden a muchos jóvenes acceder a formación financiera y en desarrollo sustentable de calidad.
+                </p>
+                <p>
+                    <span class="highlight">Nuestro objetivo es empoderar</span> a las personas entregándoles experiencias de aprendizaje dinámicas, accesibles y gratuitas, que despierten la curiosidad y fomenten decisiones conscientes. Buscamos construir una comunidad que aprenda, crezca y comparta logros, porque estamos convencidos de que juntos podemos forjar un futuro más justo, responsable y lleno de oportunidades.
+                </p>
+            </div>
+        </div>
     </div>
-        
+</div>
 
+<script>
+(function() {
+    const modal = document.getElementById('auth-modal');
+    const openers = document.querySelectorAll('.js-open-auth');
+    const closers = document.querySelectorAll('[data-close-auth]');
+    const loginForm = document.querySelector('.login-form');
+    const registerForm = document.querySelector('.register-form');
+    const registerHeader = document.querySelector('.register-header');
+    const loginHeader = document.querySelector('.login-header');
+    const homeLinks = document.querySelectorAll('.auth-links a');
 
-        <script>
-        (function() {
-            const modal = document.getElementById('auth-modal');
-            const openers = document.querySelectorAll('.js-open-auth');
-            const closers = document.querySelectorAll('[data-close-auth]');
-            const tabLogin = document.getElementById('tab-login');
-            const tabSignup = document.getElementById('tab-signup');
-            const panelLogin = document.getElementById('panel-login');
-            const panelSignup = document.getElementById('panel-signup');
-
-            function openModal(defaultTab) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                if (defaultTab === 'signup') {
-                    showSignup();
-                } else {
-                    showLogin();
-                }
-                document.body.style.overflow = 'hidden';
+    // === Función para obtener token CSRF desde cookies ===
+    function getCSRFToken() {
+        const name = 'csrftoken';
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
             }
+        }
+        return '';
+    }
 
-            function closeModal() {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
+    // --- Mostrar sólo login o registro ---
+    function showLogin() {
+        loginForm.classList.remove('hidden');
+        loginHeader.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        registerHeader.classList.add('hidden');
+    }
+
+    function showSignup() {
+        registerForm.classList.remove('hidden');
+        registerHeader.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        loginHeader.classList.add('hidden');
+    }
+
+    // --- Abrir / cerrar modal ---
+    function openModal(defaultTab = 'login') {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        defaultTab === 'signup' ? showSignup() : showLogin();
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    // --- Abrir desde botones externos ---
+    openers.forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            const defaultTab = this.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login';
+            openModal(defaultTab);
+        });
+    });
+
+    // --- Cerrar desde overlay o "volver al inicio" ---
+    closers.forEach(el => el.addEventListener('click', closeModal));
+    homeLinks.forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            closeModal();
+            const href = link.getAttribute('href');
+            if (href && href !== '#') {
+                window.location.href = href;
             }
+        });
+    });
 
-            function showLogin() {
-                panelLogin.classList.remove('hidden');
-                panelSignup.classList.add('hidden');
-                tabLogin.classList.add('text-indigo-600', 'border-indigo-600');
-                tabSignup.classList.remove('text-indigo-600', 'border-indigo-600');
-            }
+    // --- Cambiar entre login y registro sin enviar formulario ---
+    document.querySelectorAll('.modern-button').forEach(btn => {
+        // Si el botón no tiene type, lo forzamos a button para evitar submits
+        if (!btn.hasAttribute('type')) btn.setAttribute('type', 'button');
 
-            function showSignup() {
-                panelLogin.classList.add('hidden');
-                panelSignup.classList.remove('hidden');
-                tabSignup.classList.add('text-indigo-600', 'border-indigo-600');
-                tabLogin.classList.remove('text-indigo-600', 'border-indigo-600');
-            }
-
-            openers.forEach(el => {
-                el.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const defaultTab = this.textContent && this.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login';
-                    openModal(defaultTab);
-                });
-            });
-
-            closers.forEach(el => el.addEventListener('click', closeModal));
-
-            tabLogin.addEventListener('click', showLogin);
-            tabSignup.addEventListener('click', showSignup);
-
-            // Manejar envío del formulario de login con AJAX
-            panelLogin.addEventListener('submit', async function(e) {
+        btn.addEventListener('click', e => {
+            const text = e.target.textContent.toLowerCase();
+            if (text.includes('regístrate') || text.includes('registrarme')) {
                 e.preventDefault();
-                
-                const username = document.getElementById('login-username').value;
-                const password = document.getElementById('login-password').value;
-                const errorDiv = document.getElementById('login-error');
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                
-                // Ocultar error anterior
-                errorDiv.classList.add('hidden');
-                
-                try {
-                    const response = await fetch('{% url "login" %}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken
-                        },
-                        body: JSON.stringify({
-                            username: username,
-                            password: password
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        // Login exitoso, redirigir
-                        window.location.href = data.redirect;
-                    } else {
-                        // Mostrar error
-                        errorDiv.textContent = data.error;
-                        errorDiv.classList.remove('hidden');
-                    }
-                } catch (error) {
-                    errorDiv.textContent = 'Error de conexión. Inténtalo nuevamente.';
-                    errorDiv.classList.remove('hidden');
-                }
-            });
-
-            // Manejar envío del formulario de registro con AJAX
-            panelSignup.addEventListener('submit', async function(e) {
+                showSignup();
+            } else if (text.includes('inicia sesión')) {
                 e.preventDefault();
-                
-                const username = document.getElementById('signup-username').value;
-                const password1 = document.getElementById('signup-password1').value;
-                const password2 = document.getElementById('signup-password2').value;
-                const errorDiv = document.getElementById('signup-error');
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                
-                // Ocultar errores anteriores
-                errorDiv.classList.add('hidden');
-                document.getElementById('signup-username-error').classList.add('hidden');
-                document.getElementById('signup-password1-error').classList.add('hidden');
-                document.getElementById('signup-password2-error').classList.add('hidden');
-                
-                try {
-                    const response = await fetch('{% url "registro" %}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken
-                        },
-                        body: JSON.stringify({
-                            username: username,
-                            password1: password1,
-                            password2: password2
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        // Registro exitoso, redirigir
-                        window.location.href = data.redirect;
-                    } else {
-                        // Mostrar errores
-                        if (data.errors) {
-                            // Errores específicos por campo
-                            if (data.errors.username) {
-                                const usernameError = document.getElementById('signup-username-error');
-                                usernameError.textContent = data.errors.username[0];
-                                usernameError.classList.remove('hidden');
-                            }
-                            if (data.errors.password1) {
-                                const password1Error = document.getElementById('signup-password1-error');
-                                password1Error.textContent = data.errors.password1[0];
-                                password1Error.classList.remove('hidden');
-                            }
-                            if (data.errors.password2) {
-                                const password2Error = document.getElementById('signup-password2-error');
-                                password2Error.textContent = data.errors.password2[0];
-                                password2Error.classList.remove('hidden');
-                            }
-                        } else if (data.error) {
-                            // Error general
-                            errorDiv.textContent = data.error;
-                            errorDiv.classList.remove('hidden');
-                        }
-                    }
-                } catch (error) {
-                    errorDiv.textContent = 'Error de conexión. Inténtalo nuevamente.';
-                    errorDiv.classList.remove('hidden');
-                }
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                    closeModal();
-                }
-            });
-
-            // Abrir modal automáticamente si hay mensajes de error
-            if (document.body.dataset.hasMessages === 'true') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    openModal('login');
-                });
+                showLogin();
             }
-        })();
-        </script>
+        });
+    });
 
-        <!-- Footer -->
+    // --- Cerrar modal con tecla Escape ---
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+
+    // --- Autoabrir modal si hay errores del servidor ---
+    if (document.body.dataset.hasMessages === 'true') {
+        document.addEventListener('DOMContentLoaded', function() {
+            openModal('login');
+        });
+    }
+
+    // --- LOGIN AJAX ---
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const response = await fetch("{% url 'login' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken(),
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+            console.log("Respuesta login:", data);
+
+            if (data.success) {
+                window.location.href = data.redirect || "{% url 'perfil' %}";
+            } else {
+                alert(data.error || "Credenciales incorrectas.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error al conectar con el servidor.");
+        }
+    });
+
+    // --- REGISTRO AJAX ---
+    registerForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('signup-username').value.trim();
+        const password1 = document.getElementById('signup-password1').value;
+        const password2 = document.getElementById('signup-password2').value;
+
+        try {
+            const response = await fetch("{% url 'registro' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken(),
+                },
+                body: JSON.stringify({ username, password1, password2 }),
+            });
+
+            const data = await response.json();
+            console.log("Respuesta registro:", data);
+
+            if (data.success) {
+                window.location.href = data.redirect || "{% url 'perfil' %}";
+            } else if (data.errors) {
+                const errores = Object.values(data.errors).flat().join("\n");
+                alert(errores || "Error en el registro.");
+            } else {
+                alert(data.error || "Error en el registro.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error al conectar con el servidor.");
+        }
+    });
+})();
+</script>
+
+<!-- Footer -->
 <footer class="bg-gray-800 text-white text-center p-6 mt-16">
     &copy; 2025 Progesa Libre
 </footer> 

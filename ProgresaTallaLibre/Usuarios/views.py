@@ -11,7 +11,7 @@ import json
 def login_view(request):
     if request.method == 'POST':
         # Verificar si es una petición AJAX
-        if request.headers.get('Content-Type') == 'application/json':
+        if request.headers.get('Content-Type', '').startswith('application/json'):
             try:
                 data = json.loads(request.body)
                 username = data.get('username', '').strip()

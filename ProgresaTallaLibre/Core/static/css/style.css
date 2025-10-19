@@ -3,7 +3,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-   /* outline: 1px solid red; /* para ver qué elemento genera el borde and debug */
+    outline: 1px solid red; /* para ver qué elemento genera el borde and debug */
 }
 
 html, body {
@@ -71,7 +71,7 @@ html, body {
 
 .right-section nav a {
     text-decoration: underline;
-    color: #fff;
+    color: #A18262;
     transition: opacity 0.3s ease;
 }
 
@@ -165,10 +165,16 @@ html, body {
 
 }
 .logo-bottom {
+     background-image: url("../img/logo.png");
+    background-size: contain; 
+    background-repeat: no-repeat;   
+    background-position: center;     
     position: absolute;
     bottom: 2%;
     right: 2%;
     width: clamp(40px, 5vw, 70px);
+    height: 70px;
+    z-index: 90;
 }
 
 /* === RESPONSIVE PARA MÓVILES === */
@@ -182,56 +188,261 @@ html, body {
  Login Overlay
  ----------------------*/
 
-.login-overlay {
-   position: fixed;
+.auth-overlay {
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;           
+    width: 100%;
     height: 100%;
-    z-index: 50;
-    
-    display: flex;          
-    align-items: center;    
+    z-index: 1000;
+    display: none;
+    align-items: center;
     justify-content: center;
-    
-    background-color: rgba(0, 0, 0, 0.6); 
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
 }
 
+.auth-overlay.flex {
+    display: flex;
+}
 
-.hidden {
+.auth-overlay.hidden {
     display: none;
 }
-.marco-falso{
-    background: rgba(0, 0, 0, 0.6); 
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); 
-    width: 25%;
-    height: 50%;
-    color: white;
-    text-align: center;
+
+/* === BACKDROP === */
+.auth-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
+
+/* === CONTENEDOR PRINCIPAL === */
+.auth-container {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, #070410 0%, #1a1a2e 50%, #16213e 100%);
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 90%;
+    max-width: 450px;
+}
+
+/* === BOTÓN CERRAR === */
+.auth-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-close:hover {
+    color: #8b6552;
+}
+
+/* === HEADERS === */
+.login-header,
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header.hidden,
+.register-header.hidden {
+    display: none;
+}
+
+.auth-title {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.auth-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* === FORMULARIOS === */
+.login-form,
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-form.hidden,
+.register-form.hidden {
+    display: none;
+}
+
+/* === INPUT GROUP === */
+.modern-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modern-label {
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.modern-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px 20px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: #8b6552;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 101, 82, 0.3);
+}
+
+.modern-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* === CHECKBOX === */
+.modern-checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.modern-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: #8b6552;
+    cursor: pointer;
+}
+
+.modern-checkbox-label {
+    color: #ffffff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* === BOTONES === */
+.modern-button {
+    background: linear-gradient(135deg, #8b6552 0%, #6b4e3d 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 15px 30px;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(139, 101, 82, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.modern-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 101, 82, 0.4);
+    background: linear-gradient(135deg, #9d6b5a 0%, #7a5a4a 100%);
+}
+
+.modern-button:active {
+    transform: translateY(0);
+}
+
+/* === LINKS === */
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-links p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin: 10px 0;
+}
+
+.modern-link {
+    background: none;
+    border: none;
+    color: #8b6552;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+    padding: 0;
+}
+
+.modern-link:hover {
+    color: #9d6b5a;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 40px 30px;
+        width: 95%;
+    }
+
+    .auth-title {
+        font-size: 1.5rem;
+    }
+}
+
 /* ---------------------
  BLOQUE DE QUIENES SOMOS
  ----------------------*/
-.quienes-somos-title {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 900;
-    letter-spacing: 0.05em;
-    text-decoration: underline;
-    text-decoration-color: #6366f1;
-    text-decoration-thickness: 4px;
-    text-underline-offset: 12px;
-    margin: 0;
-    line-height: 1.1;
+
+#quienes-somos {
+    width: 100%;
+    overflow-x: hidden;
 }
 
-.title-with-logo {
+/* === TÍTULO CON LOGO === */
+.title-logo-box {
+    background: #000000;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
     flex-wrap: wrap;
+    padding: 3rem 2rem;
     position: relative;
 }
 
@@ -239,102 +450,276 @@ html, body {
     width: 60px;
     height: 60px;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 10px 30px rgba(139, 101, 82, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     flex-shrink: 0;
-    order: -1;
+    overflow: hidden;
 }
 
 .title-logo:hover {
     transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 20px 50px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 20px 50px rgba(139, 101, 82, 0.5);
 }
 
 .title-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    border-radius: 16px;
 }
 
-@media (max-width: 768px) {
-    .title-with-logo {
-        gap: 1rem;
-    }
-    
-    .title-logo {
-        width: 50px;
-        height: 50px;
-    }
+.quienes-somos-title {
+    color: #A18262;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-decoration-color: #8b6552;
+    text-decoration-thickness: 4px;
+    text-underline-offset: 12px;
+    margin: 0;
+    line-height: 1.1;
 }
 
-@media (max-width: 480px) {
-    .title-with-logo {
-        gap: 0.8rem;
-    }
-    
-    .title-logo {
-        width: 45px;
-        height: 45px;
-    }
+/* === CONTENEDOR PRINCIPAL === */
+.contenedor-main2 {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
+    width: 100%;
 }
 
-.quienes-somos-image {
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 25px 80px rgba(99, 102, 241, 0.4);
-    aspect-ratio: 16/9; 
-    min-height: 400px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* === COLUMNA IZQUIERDA (Media) === */
+.izquierda2 {
+    width: 70%;
+    min-height: 100vh;
+    /* Imagen de fondo */
+    background-image: url("{% static 'core/img/background.png' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Efecto parallax opcional */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 2rem;
+    position: relative;
 }
 
-.quienes-somos-image:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 35px 100px rgba(99, 102, 241, 0.5);
-}
-
-.quienes-somos-image img {
+/* Overlay oscuro sobre la imagen para mejor contraste */
+.izquierda2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    background: rgba(0, 0, 0, 0.4); /* Ajusta la opacidad aquí (0.4 = 40% oscuro) */
+    pointer-events: none;
+    z-index: 1;
 }
 
-.quienes-somos-text {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
+/* === CONTENEDOR DE MARCOS === */
+.marcos-container {
+    width: 80%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    z-index: 2;
+}
+
+/* === MARCO CON EFECTO NEÓN === */
+.marco {
+    width: 100%;
+    aspect-ratio: 16/9;
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 20px;
-    padding: 3rem;
-    line-height: 1.8;
-    font-size: 1.1rem;
-    color: #1a1a1a;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    box-shadow: 
+        0 0 40px rgba(139, 101, 82, 0.3),
+        inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Borde neón animado */
+.marco::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, 
+        #ff00ff, #00ffff, #ff00ff, #00ffff,
+        #ff00ff, #00ffff, #ff00ff);
+    background-size: 400%;
+    border-radius: 20px;
+    z-index: -1;
+    animation: neonGlow 3s linear infinite;
+    filter: blur(10px);
+    opacity: 0.8;
+}
+
+@keyframes neonGlow {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* === CONTENEDOR DE FOTO === */
+.foto {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #000;
+    background-image: url("{% static 'core/img/marcofoto.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Segunda foto con imagen diferente (opcional) */
+.foto-2 {
+    background-image: url("{% static 'core/img/marcofoto2.jpg' %}");
+}
+
+/* === COLUMNA DERECHA (Texto) === */
+.derecha2 {
+    width: 30%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2a2520 0%, #1a1612 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5rem 2.5rem;
+    position: relative;
+}
+
+/* Textura sutil para el fondo */
+.derecha2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 30% 20%, rgba(139, 101, 82, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(139, 101, 82, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* === CAJA DE TEXTO MEJORADA === */
+.quienes-somos-text {
+    max-width: 100%;
+    background: linear-gradient(135deg, rgba(62, 52, 42, 0.95) 0%, rgba(42, 37, 32, 0.98) 100%);
+    border-radius: 24px;
+    padding: 3.5rem 3rem;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(139, 101, 82, 0.3);
+    border: 1px solid rgba(139, 101, 82, 0.2);
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .quienes-somos-text:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
 }
 
+.quienes-somos-text p {
+    font-size: 1.5rem;
+    line-height: 1.9;
+    color: #e8d5c4;
+    margin-bottom: 2rem;
+    text-align: justify;
+}
+
+.quienes-somos-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* Primera letra grande (drop cap) */
+.quienes-somos-text .first-paragraph::first-letter {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #d4a574;
+    float: left;
+    line-height: 0.8;
+    margin-right: 15px;
+    margin-top: 8px;
+}
+
+/* Texto destacado */
+.quienes-somos-text .highlight {
+    font-weight: 700;
+    color: #d4a574;
+    position: relative;
+}
+
+/* === RESPONSIVE === */
 @media (max-width: 1024px) {
+    .contenedor-main2 {
+        flex-direction: column;
+    }
+
+    .izquierda2,
+    .derecha2 {
+        width: 100%;
+        min-height: 60vh;
+    }
+
+    .derecha2 {
+        padding: 3rem 2rem;
+    }
+
+    .marco {
+        width: 90%;
+    }
+
+    .marcos-container {
+        width: 90%;
+        gap: 2rem;
+    }
+
     .quienes-somos-text {
         padding: 2rem;
-        font-size: 1rem;
-    }
-    
-    .quienes-somos-image {
-        min-height: 350px;
     }
 }
 
 @media (max-width: 768px) {
+    .title-logo-box {
+        padding: 2rem 1rem;
+    }
+
+    .title-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .izquierda2,
+    .derecha2 {
+        padding: 3rem 1.5rem;
+    }
+
     .quienes-somos-text {
         padding: 1.5rem;
+    }
+
+    .quienes-somos-text p {
         font-size: 0.95rem;
     }
-    
-    .quienes-somos-image {
-        min-height: 300px;
+
+    .quienes-somos-text .first-paragraph::first-letter {
+        font-size: 2.5rem;
     }
 }
