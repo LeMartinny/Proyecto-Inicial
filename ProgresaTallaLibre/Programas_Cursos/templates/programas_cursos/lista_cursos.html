@@ -677,11 +677,12 @@
         overlay.addEventListener('click', closePanel);
         
         // Botón inscribir
-        inscribirBtn.addEventListener('click', function() {
-            alert(`¡Inscripción exitosa al curso: ${currentCursoId}!`);
-            // Aquí puedes agregar la redirección real
-            // window.location.href = '/ruta-inscripcion/' + currentCursoId;
-        });
+       inscribirBtn.addEventListener('click', function() {
+            if (currentCursoId) {
+                // Redirigir a la vista de inscripción
+                //window.location.href = `/cursos/inscribir/${currentCursoId}/`;
+    }
+});
         
         // Cerrar con tecla ESC
         document.addEventListener('keydown', function(e) {
