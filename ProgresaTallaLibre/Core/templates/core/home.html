@@ -22,13 +22,15 @@
         
             <nav>
                 <div class="separador">
-                <a href="#quienes-somos">¿QUIENES SOMOS?</a>
-                <a href="{% url 'lista_cursos' %}">PROGRAMAS</a>
-                {% if is_authenticated %}
-                    <a href="{% url 'usuarios:perfil' %}">TU PERFIL</a>
-                {% else %}
-                    <a href="#auth-modal" class="js-open-auth">TU PERFIL</a>
-                {% endif %}
+                    <a href="#quienes-somos">¿QUIENES SOMOS?</a>
+                    {% if is_authenticated %}
+                        <a href="{% url 'lista_cursos' %}">PROGRAMAS</a>
+                        <a href="{% url 'usuarios:perfil' %}">TU PERFIL</a>
+                    {% else %}
+                        <!-- Abrir modal de login/registro si no está autenticado -->
+                        <a href="#auth-modal" class="js-open-auth">PROGRAMAS</a>
+                        <a href="#auth-modal" class="js-open-auth">TU PERFIL</a>
+                    {% endif %}
                 </div>
             </nav>
 
