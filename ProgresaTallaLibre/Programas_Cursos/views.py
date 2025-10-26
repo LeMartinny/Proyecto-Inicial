@@ -6,6 +6,6 @@ def lista_cursos(request):
     return render(request, 'programas_cursos/lista_cursos.html', {'cursos': cursos})
 
 # Detalle de un curso
-def detalle_curso(request, curso_id):
-    curso = f'Curso {curso_id}'  # Reemplazar con modelo real
-    return render(request, 'programas_cursos/detalle_curso.html', {'curso': curso})
+def detalle_curso(request, slug):
+    curso = curso.objects.get(curso,slug=slug)
+    return render(request, 'detalle_curso.html', {'curso': curso})

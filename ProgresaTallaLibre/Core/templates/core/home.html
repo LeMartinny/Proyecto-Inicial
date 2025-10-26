@@ -246,22 +246,24 @@
         });
     });
 
-    // --- Cambiar entre login y registro sin enviar formulario ---
-    document.querySelectorAll('.modern-button').forEach(btn => {
-        // Si el botón no tiene type, lo forzamos a button para evitar submits
-        if (!btn.hasAttribute('type')) btn.setAttribute('type', 'button');
-
-        btn.addEventListener('click', e => {
-            const text = e.target.textContent.toLowerCase();
-            if (text.includes('regístrate') || text.includes('registrarme')) {
-                e.preventDefault();
-                showSignup();
-            } else if (text.includes('inicia sesión')) {
-                e.preventDefault();
-                showLogin();
-            }
+    // --- SOLO los botones de cambio entre login/registro (NO los de submit) ---
+    // Botón "Regístrate aquí" dentro del login form
+    const switchToRegisterBtn = loginForm.querySelector('.auth-links button');
+    if (switchToRegisterBtn) {
+        switchToRegisterBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showSignup();
         });
-    });
+    }
+
+    // Botón "Inicia sesión aquí" dentro del register form
+    const switchToLoginBtn = registerForm.querySelector('.auth-links button');
+    if (switchToLoginBtn) {
+        switchToLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLogin();
+        });
+    }
 
     // --- Cerrar modal con tecla Escape ---
     document.addEventListener('keydown', e => {
@@ -272,20 +274,24 @@
 
     // --- Autoabrir modal si hay errores del servidor ---
     if (document.body.dataset.hasMessages === 'true') {
-        document.addEventListener('DOMContentLoaded', function() {
-            openModal('login');
-        });
+        openModal('login');
     }
 
     // --- LOGIN AJAX ---
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('Login submit triggered'); // Debug
+
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Entrando...';
 
         const username = document.getElementById('login-username').value.trim();
         const password = document.getElementById('login-password').value;
 
         try {
-            const response = await fetch("{% url 'login' %}", {
+            const response = await fetch("/usuarios/login/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -298,26 +304,37 @@
             console.log("Respuesta login:", data);
 
             if (data.success) {
-                window.location.href = data.redirect || "{% url 'perfil' %}";
+                window.location.href = data.redirect || "/usuarios/perfil/";
             } else {
                 alert(data.error || "Credenciales incorrectas.");
             }
         } catch (err) {
             console.error(err);
             alert("Error al conectar con el servidor.");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
         }
     });
 
     // --- REGISTRO AJAX ---
     registerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('Registro submit triggered'); // Debug
+
+        const submitBtn = registerForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Registrando...';
 
         const username = document.getElementById('signup-username').value.trim();
         const password1 = document.getElementById('signup-password1').value;
         const password2 = document.getElementById('signup-password2').value;
 
+        console.log('Datos a enviar:', { username, password1, password2 }); // Debug
+
         try {
-            const response = await fetch("{% url 'registro' %}", {
+            const response = await fetch("/usuarios/registro/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -330,16 +347,21 @@
             console.log("Respuesta registro:", data);
 
             if (data.success) {
-                window.location.href = data.redirect || "{% url 'perfil' %}";
+                window.location.href = data.redirect || "/usuarios/perfil/";
             } else if (data.errors) {
-                const errores = Object.values(data.errors).flat().join("\n");
-                alert(errores || "Error en el registro.");
+                const errores = Object.entries(data.errors)
+                    .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
+                    .join('\n');
+                alert('Errores en el formulario:\n\n' + errores);
             } else {
                 alert(data.error || "Error en el registro.");
             }
         } catch (err) {
-            console.error(err);
+            console.error('Error en la petición:', err);
             alert("Error al conectar con el servidor.");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
         }
     });
 })();

@@ -3,7 +3,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    outline: 1px solid red; /* para ver qué elemento genera el borde and debug */
+    /* outline: 1px solid red; /* para ver qué elemento genera el borde and debug */
 }
 
 html, body {
@@ -37,17 +37,17 @@ html, body {
     background-position: center;
     background-repeat: no-repeat;
 
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     align-items: flex-start; /* Empieza desde div pagina izq */
-    padding: clamp(10px, 3vw, 50px);;
 
     min-height: auto;
     position: relative;
     overflow: hidden;
-    padding: 0 5%;
+    padding: 0;
 }
 
 /* --- NAVBAR --- */
@@ -493,7 +493,7 @@ html, body {
     width: 70%;
     min-height: 100vh;
     /* Imagen de fondo */
-    background-image: url("{% static 'core/img/background.png' %}");
+    background-image: url('../img/fondousm.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

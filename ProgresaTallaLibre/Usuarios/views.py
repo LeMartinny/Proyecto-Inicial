@@ -38,6 +38,7 @@ def login_view(request):
         messages.error(request, 'Credenciales inválidas. Inténtalo nuevamente.')
         return redirect('home')
 
+@csrf_exempt
 def registro_view(request):
     if request.method == 'POST':
         try:

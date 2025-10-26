@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos - Progresa Libre</title>
+    
+    <!-- Fuente Alice -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Alice', serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        
+        .page-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            color: white;
+            text-decoration: underline;
+            text-decoration-color: #60a5fa;
+            text-decoration-thickness: 4px;
+            text-underline-offset: 10px;
+            letter-spacing: 2px;
+        }
+        
+        /* Botón Al Perfil */
+        .perfil-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+            text-decoration: none;
+        }
+        
+        .perfil-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(96, 165, 250, 0.5);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        .perfil-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+            filter: brightness(0) invert(1);
+        }
+        
+        .perfil-btn:hover .perfil-icon {
+            transform: translateX(-3px);
+        }
+        
+        /* Grid de cursos */
+        .cursos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        
+        /* Tarjeta de curso */
+        .curso-card {
+            position: relative;
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            border-radius: 20px;
+            overflow: visible;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid transparent;
+        }
+        
+        .curso-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(96, 165, 250, 0.3);
+            border-color: #60a5fa;
+        }
+        
+        .curso-card.active {
+            border-color: #60a5fa;
+            z-index: 100;
+        }
+        
+        .curso-image-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .curso-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .curso-card:hover .curso-image {
+            transform: scale(1.1);
+        }
+        
+        .curso-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .curso-card:hover .curso-overlay {
+            opacity: 1;
+        }
+        
+        .curso-content {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .curso-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .curso-subtitle {
+            font-size: 1rem;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        
+        /* Botón flotante de acción */
+        .action-button {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            width: 50px;
+            height: 50px;
+            background: #60a5fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .curso-card:hover .action-button {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .action-button:hover {
+            background: #3b82f6;
+            transform: scale(1.1);
+        }
+        
+        /* Panel lateral */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -600px;
+            width: 550px;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            overflow-y: auto;
+            border-left: 3px solid #60a5fa;
+        }
+        
+        .side-panel.open {
+            right: 0;
+        }
+        
+        .panel-content {
+            padding: 3rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        
+        .close-panel-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .close-panel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .panel-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .panel-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .panel-description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+        
+        .panel-features {
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .panel-features h4 {
+            color: #60a5fa;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .panel-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .panel-features li {
+            color: #cbd5e1;
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .panel-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #60a5fa;
+            font-weight: bold;
+        }
+        
+        .inscribir-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(96, 165, 250, 0.3);
+            margin-top: auto;
+        }
+        
+        .inscribir-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(96, 165, 250, 0.5);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        /* Overlay de fondo */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            backdrop-filter: blur(2px);
+        }
+        
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cursos-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            
+            .header-left {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .perfil-btn {
+                font-size: 1rem;
+                padding: 0.7rem 1.3rem;
+            }
+            
+            .logo-container {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .curso-image-container {
+                height: 200px;
+            }
+            
+            .curso-content {
+                padding: 1.5rem;
+            }
+            
+            .curso-title {
+                font-size: 1.5rem;
+            }
+            
+            .side-panel {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .panel-content {
+                padding: 2rem;
+            }
+            
+            .panel-title {
+                font-size: 2rem;
+            }
+            
+            .panel-description {
+                font-size: 1rem;
+            }
+            
+            .panel-icon {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .cursos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay de fondo -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Panel lateral -->
+    <div class="side-panel" id="sidePanel">
+        <div class="panel-content">
+            <div class="panel-header">
+                <div style="flex: 1;"></div>
+                <button class="close-panel-btn" id="closePanelBtn">✕</button>
+            </div>
+            <div class="panel-icon" id="panelIcon">💰</div>
+            <h2 class="panel-title" id="panelTitle">Presupuesto Personal</h2>
+            <p class="panel-description" id="panelDescription">
+                Descripción del curso aquí...
+            </p>
+            <div class="panel-features" id="panelFeatures">
+                <h4>Lo que aprenderás:</h4>
+                <ul id="featuresList">
+                    <li>Característica 1</li>
+                    <li>Característica 2</li>
+                    <li>Característica 3</li>
+                </ul>
+            </div>
+            <button class="inscribir-btn" id="inscribirBtn">Inscribir Curso</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-container">
+                    <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=100&h=100&fit=crop" alt="Logo Progresa Libre">
+                </div>
+                <h1 class="page-title">Cursos</h1>
+            </div>
+            <a href="#" class="perfil-btn" onclick="alert('Redirigiendo al perfil...'); return false;">
+                <img src="https://i.imgur.com/exit-icon.png" alt="Salir" class="perfil-icon">
+                <span>Al Perfil</span>
+            </a>
+        </div>
+        
+        <!-- Grid de Cursos -->
+        <div class="cursos-grid">
+            <!-- Curso 1: Presupuesto Personal -->
+            <div class="curso-card" data-curso="presupuesto-personal">
+                <div class="curso-image-container">
+                    <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80" 
+                         alt="Presupuesto Personal" 
+                         class="curso-image">
+                    <div class="curso-overlay"></div>
+                    <div class="action-button">→</div>
+                </div>
+                <div class="curso-content">
+                    <h2 class="curso-title">Presupuesto Personal</h2>
+                    <p class="curso-subtitle">Aprende a gestionar tus finanzas</p>
+                </div>
+            </div>
+            
+            <!-- Curso 2: Tipos de Inversión -->
+            <div class="curso-card" data-curso="tipos-inversion">
+                <div class="curso-image-container">
+                    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" 
+                         alt="Tipos de Inversión" 
+                         class="curso-image">
+                    <div class="curso-overlay"></div>
+                    <div class="action-button">→</div>
+                </div>
+                <div class="curso-content">
+                    <h2 class="curso-title">Tipos de Inversión</h2>
+                    <p class="curso-subtitle">Descubre dónde invertir tu dinero</p>
+                </div>
+            </div>
+            
+            <!-- Curso 3: Ahorro y Gasto -->
+            <div class="curso-card" data-curso="ahorro-gasto">
+                <div class="curso-image-container">
+                    <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80" 
+                         alt="Ahorro y Gasto" 
+                         class="curso-image">
+                    <div class="curso-overlay"></div>
+                    <div class="action-button">→</div>
+                </div>
+                <div class="curso-content">
+                    <h2 class="curso-title">Ahorro y Gasto</h2>
+                    <p class="curso-subtitle">Controla tus gastos y ahorra más</p>
+                </div>
+            </div>
+            
+            <!-- Curso 4: Inflación -->
+            <div class="curso-card" data-curso="inflacion">
+                <div class="curso-image-container">
+                    <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&q=80" 
+                         alt="Inflación" 
+                         class="curso-image">
+                    <div class="curso-overlay"></div>
+                    <div class="action-button">→</div>
+                </div>
+                <div class="curso-content">
+                    <h2 class="curso-title">Inflación</h2>
+                    <p class="curso-subtitle">Entiende el impacto de la inflación</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data de los cursos
+        const cursosData = {
+            'presupuesto-personal': {
+                icon: '💰',
+                title: 'Presupuesto Personal',
+                description: 'Domina el arte de gestionar tus finanzas personales con este curso completo. Aprenderás a crear presupuestos efectivos, controlar tus ingresos y gastos, establecer metas financieras realistas y desarrollar hábitos saludables de administración del dinero. Ideal para quienes desean tomar control total de su economía personal.',
+                features: [
+                    'Crea presupuestos mensuales efectivos',
+                    'Controla ingresos y gastos detalladamente',
+                    'Establece metas financieras alcanzables',
+                    'Desarrolla hábitos de ahorro sostenibles'
+                ]
+            },
+            'tipos-inversion': {
+                icon: '📈',
+                title: 'Tipos de Inversión',
+                description: 'Explora el mundo de las inversiones y descubre las diferentes opciones disponibles para hacer crecer tu patrimonio. Conoce acciones, bonos, fondos mutuos, bienes raíces y más. Aprende a evaluar riesgos, diversificar tu portafolio y tomar decisiones informadas que se ajusten a tu perfil y objetivos financieros.',
+                features: [
+                    'Conoce acciones, bonos y fondos mutuos',
+                    'Aprende a evaluar riesgos de inversión',
+                    'Diversifica tu portafolio efectivamente',
+                    'Toma decisiones financieras informadas'
+                ]
+            },
+            'ahorro-gasto': {
+                icon: '🏦',
+                title: 'Ahorro y Gasto',
+                description: 'Desarrolla una relación saludable con el dinero aprendiendo a equilibrar tus gastos y construir un fondo de ahorro sólido. Descubre técnicas efectivas para reducir gastos innecesarios, identificar fugas de dinero, crear hábitos de ahorro sostenibles y alcanzar tus metas financieras más rápido de lo que imaginas.',
+                features: [
+                    'Reduce gastos innecesarios efectivamente',
+                    'Identifica y elimina fugas de dinero',
+                    'Construye un fondo de ahorro sólido',
+                    'Alcanza tus metas financieras rápido'
+                ]
+            },
+            'inflacion': {
+                icon: '📊',
+                title: 'Inflación',
+                description: 'Comprende uno de los conceptos económicos más importantes y cómo afecta tu poder adquisitivo. Aprende a proteger tus ahorros e inversiones del impacto inflacionario, entiende los indicadores económicos clave y toma decisiones financieras inteligentes en un entorno económico cambiante.',
+                features: [
+                    'Entiende cómo funciona la inflación',
+                    'Protege tus ahorros del impacto inflacionario',
+                    'Comprende indicadores económicos clave',
+                    'Toma decisiones en contextos económicos variables'
+                ]
+            }
+        };
+        
+        const sidePanel = document.getElementById('sidePanel');
+        const overlay = document.getElementById('overlay');
+        const closePanelBtn = document.getElementById('closePanelBtn');
+        const inscribirBtn = document.getElementById('inscribirBtn');
+        let currentCursoId = null;
+        
+        // Función para abrir el panel
+        function openPanel(cursoId) {
+            const curso = cursosData[cursoId];
+            currentCursoId = cursoId;
+            
+            // Actualizar contenido del panel
+            document.getElementById('panelIcon').textContent = curso.icon;
+            document.getElementById('panelTitle').textContent = curso.title;
+            document.getElementById('panelDescription').textContent = curso.description;
+            
+            // Actualizar lista de características
+            const featuresList = document.getElementById('featuresList');
+            featuresList.innerHTML = '';
+            curso.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.textContent = feature;
+                featuresList.appendChild(li);
+            });
+            
+            // Abrir panel y overlay
+            sidePanel.classList.add('open');
+            overlay.classList.add('show');
+            
+            // Marcar tarjeta como activa
+            document.querySelectorAll('.curso-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector(`[data-curso="${cursoId}"]`).classList.add('active');
+        }
+        
+        // Función para cerrar el panel
+        function closePanel() {
+            sidePanel.classList.remove('open');
+            overlay.classList.remove('show');
+            document.querySelectorAll('.curso-card').forEach(card => {
+                card.classList.remove('active');
+            });
+        }
+        
+        // Event listeners para las tarjetas
+        document.querySelectorAll('.curso-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const cursoId = this.getAttribute('data-curso');
+                openPanel(cursoId);
+            });
+            
+            // Efecto de hover
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.zIndex = '1';
+                }
+            });
+        });
+        
+        // Cerrar panel
+        closePanelBtn.addEventListener('click', closePanel);
+        overlay.addEventListener('click', closePanel);
+        
+        // Botón inscribir
+        inscribirBtn.addEventListener('click', function() {
+            alert(`¡Inscripción exitosa al curso: ${currentCursoId}!`);
+            // Aquí puedes agregar la redirección real
+            // window.location.href = '/ruta-inscripcion/' + currentCursoId;
+        });
+        
+        // Cerrar con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidePanel.classList.contains('open')) {
+                closePanel();
+            }
+        });
+    </script>
+</body>
+</html>
