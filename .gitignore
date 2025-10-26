@@ -1,0 +1,51 @@
+// ...existing code...
+# Byte-compiled / caches
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite DB (evita que el archivo de la BD local aparezca como cambio)
+ProgresaTallaLibre/db.sqlite3
+db.sqlite3
+
+# Entornos virtuales
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# Django / estáticos / media
+staticfiles/
+media/
+*/media/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+
+# Tests / coverage / caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Distribución / build
+dist/
+build/
+*.egg-info/
+pip-wheel-metadata/
+
+# Logs / OS
+*.log
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Misc
+*.sqlite3-journal
+celerybeat-schedule
+# ...existing code...
