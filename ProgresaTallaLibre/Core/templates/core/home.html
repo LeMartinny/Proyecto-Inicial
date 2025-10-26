@@ -27,9 +27,11 @@
                         <a href="{% url 'lista_cursos' %}">PROGRAMAS</a>
                         <a href="{% url 'usuarios:perfil' %}">TU PERFIL</a>
                     {% else %}
-                        <!-- Abrir modal de login/registro si no está autenticado -->
-                        <a href="#auth-modal" class="js-open-auth">PROGRAMAS</a>
-                        <a href="#auth-modal" class="js-open-auth">TU PERFIL</a>
+                        <!-- Abrir modal de login/registro si no está autenticado.
+                             data-default-tab: 'login'|'signup'
+                             data-subtitle: texto a mostrar en el modal -->
+                        <a href="#auth-modal" class="js-open-auth" data-default-tab="login" data-subtitle="Debes iniciar sesión primero">PROGRAMAS</a>
+                        <a href="#auth-modal" class="js-open-auth" data-default-tab="login" data-subtitle="Bienvenido de vuelta">TU PERFIL</a>
                     {% endif %}
                 </div>
             </nav>
@@ -233,12 +235,29 @@
     }
 
     // --- Abrir / cerrar modal ---
-    function openModal(defaultTab = 'login') {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        defaultTab === 'signup' ? showSignup() : showLogin();
-        document.body.style.overflow = 'hidden';
-    }
+    function openModal(defaultTab = 'login', subtitle = null) {
+         modal.classList.remove('hidden');
+         modal.classList.add('flex');
+         defaultTab === 'signup' ? showSignup() : showLogin();
+         // Actualizar subtítulo del header de login o register según el tab
+         if (subtitle !== null) {
+             // loginHeader y registerHeader contienen .auth-subtitle en sus bloques
+             if (defaultTab === 'signup') {
+                 const sh = registerHeader.querySelector('.auth-subtitle');
+                 if (sh) sh.textContent = subtitle;
+             } else {
+                 const sh = loginHeader.querySelector('.auth-subtitle');
+                 if (sh) sh.textContent = subtitle;
+             }
+         } else {
+             // Restablecer subtítulos por defecto si no se pasa subtitle
+             const shLogin = loginHeader.querySelector('.auth-subtitle');
+             if (shLogin) shLogin.textContent = 'Bienvenido de vuelta';
+             const shReg = registerHeader.querySelector('.auth-subtitle');
+             if (shReg) shReg.textContent = 'Únete a nuestra comunidad';
+         }
+         document.body.style.overflow = 'hidden';
+     }
 
     function closeModal() {
         modal.classList.add('hidden');
@@ -250,8 +269,52 @@
     openers.forEach(el => {
         el.addEventListener('click', function(e) {
             e.preventDefault();
-            const defaultTab = this.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login';
-            openModal(defaultTab);
+            // Prioriza atributos data-* si están presentes
+            const defaultTab = el.dataset.defaultTab || (el.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login');
+            const subtitle = el.dataset.subtitle || null;
+            openModal(defaultTab, subtitle);
+        });
+    });
+    
+    // --- Abrir / cerrar modal ---
+    function openModal(defaultTab = 'login', subtitle = null) {
+         modal.classList.remove('hidden');
+         modal.classList.add('flex');
+         defaultTab === 'signup' ? showSignup() : showLogin();
+         // Actualizar subtítulo del header de login o register según el tab
+         if (subtitle !== null) {
+             // loginHeader y registerHeader contienen .auth-subtitle en sus bloques
+             if (defaultTab === 'signup') {
+                 const sh = registerHeader.querySelector('.auth-subtitle');
+                 if (sh) sh.textContent = subtitle;
+             } else {
+                 const sh = loginHeader.querySelector('.auth-subtitle');
+                 if (sh) sh.textContent = subtitle;
+             }
+         } else {
+             // Restablecer subtítulos por defecto si no se pasa subtitle
+             const shLogin = loginHeader.querySelector('.auth-subtitle');
+             if (shLogin) shLogin.textContent = 'Bienvenido de vuelta';
+             const shReg = registerHeader.querySelector('.auth-subtitle');
+             if (shReg) shReg.textContent = 'Únete a nuestra comunidad';
+         }
+         document.body.style.overflow = 'hidden';
+     }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    // --- Abrir desde botones externos ---
+    openers.forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Prioriza atributos data-* si están presentes
+            const defaultTab = el.dataset.defaultTab || (el.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login');
+            const subtitle = el.dataset.subtitle || null;
+            openModal(defaultTab, subtitle);
         });
     });
 
