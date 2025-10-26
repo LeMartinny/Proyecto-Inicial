@@ -126,6 +126,18 @@ def add_friend(request, user_id):
     except User.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'User not found'})
 
+@login_required
+def remove_friend(request, user_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'})
+        
+    try:
+        friend = User.objects.get(id=user_id)
+        Friend.objects.filter(user=request.user, friend=friend).delete()
+        return JsonResponse({'success': True})
+    except User.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'User not found'})
+
 def logout_view(request):
     logout(request)
     return redirect('home')

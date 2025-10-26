@@ -156,6 +156,8 @@
             align-items: center;
             gap: 1rem;
             transition: all 0.3s ease;
+            justify-content: space-between;
+            padding-right: 1rem;
         }
         
         .friend-card:hover {
@@ -178,6 +180,7 @@
         
         .friend-info {
             flex: 1;
+            margin-right: 1rem;
         }
         
         .friend-name {
@@ -308,6 +311,46 @@
             transform: translateY(-1px);
         }
         
+        .remove-friend-btn {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+        }
+        
+        .remove-friend-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+        }
+        
+        .remove-friend-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.5;
+        }
+        
+        /* Ajustar el espaciado en la friend-card */
+        .friend-card {
+            justify-content: space-between;
+            padding-right: 1rem;
+        }
+        
+        .friend-info {
+            flex: 1;
+            margin-right: 1rem;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -377,6 +420,12 @@
                         <div class="friend-name">{{ friendship.friend.username }}</div>
                         <div class="friend-status">Miembro desde {{ friendship.friend.date_joined|date:"d/m/Y" }}</div>
                     </div>
+                    <button class="remove-friend-btn" onclick="removeFriend({{ friendship.friend.id }})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
                 {% endfor %}
             `;
@@ -447,6 +496,32 @@
         } catch (err) {
             console.error('Error:', err);
             alert('Error al agregar amigo');
+        }
+    }
+
+    // Remove friend
+    async function removeFriend(userId) {
+        if (!confirm('¿Estás seguro de que quieres eliminar a este amigo?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/usuarios/remove_friend/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                location.reload(); // Recargar para actualizar la lista
+            } else {
+                alert(data.error || 'Error al eliminar amigo');
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Error al eliminar amigo');
         }
     }
 
