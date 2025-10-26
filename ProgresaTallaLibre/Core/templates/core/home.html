@@ -127,7 +127,15 @@
 
                         <div class="modern-input-group">
                             <label for="login-password" class="modern-label">Contraseña</label>
-                            <input id="login-password" name="password" type="password" required class="modern-input" placeholder="Ingresa tu contraseña" />
+                            <div class="password-input-wrapper">
+                                <input id="login-password" name="password" type="password" required class="modern-input" placeholder="Ingresa tu contraseña" />
+                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('login-password', this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
+                                        <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="modern-checkbox-group">
@@ -160,12 +168,28 @@
 
                         <div class="modern-input-group">
                             <label for="signup-password1" class="modern-label">Contraseña</label>
-                            <input id="signup-password1" name="password1" type="password" required class="modern-input" placeholder="Crea una contraseña" />
+                            <div class="password-input-wrapper">
+                                <input id="signup-password1" name="password1" type="password" required class="modern-input" placeholder="Crea una contraseña" />
+                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signup-password1', this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
+                                        <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="modern-input-group">
                             <label for="signup-password2" class="modern-label">Confirmar Contraseña</label>
-                            <input id="signup-password2" name="password2" type="password" required class="modern-input" placeholder="Confirma tu contraseña" />
+                            <div class="password-input-wrapper">
+                                <input id="signup-password2" name="password2" type="password" required class="modern-input" placeholder="Confirma tu contraseña" />
+                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signup-password2', this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
+                                        <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <button type="submit" class="modern-button">Registrarme</button>
@@ -278,48 +302,26 @@
         loginHeader.classList.add('hidden');
     }
 
-    // --- Abrir / cerrar modal ---
-    function openModal(defaultTab = 'login', subtitle = null) {
-         modal.classList.remove('hidden');
-         modal.classList.add('flex');
-         defaultTab === 'signup' ? showSignup() : showLogin();
-         // Actualizar subtítulo del header de login o register según el tab
-         if (subtitle !== null) {
-             // loginHeader y registerHeader contienen .auth-subtitle en sus bloques
-             if (defaultTab === 'signup') {
-                 const sh = registerHeader.querySelector('.auth-subtitle');
-                 if (sh) sh.textContent = subtitle;
-             } else {
-                 const sh = loginHeader.querySelector('.auth-subtitle');
-                 if (sh) sh.textContent = subtitle;
-             }
-         } else {
-             // Restablecer subtítulos por defecto si no se pasa subtitle
-             const shLogin = loginHeader.querySelector('.auth-subtitle');
-             if (shLogin) shLogin.textContent = 'Bienvenido de vuelta';
-             const shReg = registerHeader.querySelector('.auth-subtitle');
-             if (shReg) shReg.textContent = 'Únete a nuestra comunidad';
-         }
-         document.body.style.overflow = 'hidden';
-     }
-
-    function closeModal() {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        document.body.style.overflow = '';
+    // --- Toggle Password Visibility ---
+    window.togglePasswordVisibility = function(inputId, button) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector('.eye-icon');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = `
+                <path fill="none" stroke="currentColor" stroke-width="2" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/>
+            `;
+        } else {
+            input.type = 'password';
+            icon.innerHTML = `
+                <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+            `;
+        }
     }
 
-    // --- Abrir desde botones externos ---
-    openers.forEach(el => {
-        el.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Prioriza atributos data-* si están presentes
-            const defaultTab = el.dataset.defaultTab || (el.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login');
-            const subtitle = el.dataset.subtitle || null;
-            openModal(defaultTab, subtitle);
-        });
-    });
-    
     // --- Abrir / cerrar modal ---
     function openModal(defaultTab = 'login', subtitle = null) {
          modal.classList.remove('hidden');
@@ -343,7 +345,7 @@
              if (shReg) shReg.textContent = 'Únete a nuestra comunidad';
          }
          document.body.style.overflow = 'hidden';
-     }
+    }
 
     function closeModal() {
         modal.classList.add('hidden');
@@ -445,6 +447,26 @@
             submitBtn.textContent = originalText;
         }
     });
+
+    // --- Toggle Password Visibility ---
+    function togglePasswordVisibility(inputId, button) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector('.eye-icon');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = `
+                <path fill="none" stroke="currentColor" stroke-width="2" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/>
+            `;
+        } else {
+            input.type = 'password';
+            icon.innerHTML = `
+                <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+            `;
+        }
+    }
 
     // --- REGISTRO AJAX ---
     registerForm.addEventListener('submit', async function(e) {

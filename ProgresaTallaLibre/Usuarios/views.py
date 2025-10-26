@@ -10,6 +10,9 @@ import json
 from django.contrib.auth.models import User
 from django.db.models import Q
 from .models import Friend
+from django.views.decorators.http import require_http_methods
+from django.core.exceptions import ValidationError
+from django.urls import reverse
 
 def login_view(request):
     if request.method == 'POST':
@@ -42,41 +45,52 @@ def login_view(request):
         return redirect('home')
 
 @csrf_exempt
+@require_http_methods(["POST"])
 def registro_view(request):
-    if request.method == 'POST':
+    try:
+        data = json.loads(request.body)
+        username = data.get('username', '').strip()
+        password1 = data.get('password1', '')
+        password2 = data.get('password2', '')
+
+        if not username or not password1 or not password2:
+            return JsonResponse({
+                'success': False,
+                'error': 'Todos los campos son requeridos'
+            })
+
+        if password1 != password2:
+            return JsonResponse({
+                'success': False,
+                'error': 'Las contraseñas no coinciden'
+            })
+
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({
+                'success': False,
+                'error': 'El nombre de usuario ya está en uso'
+            })
+
+        # Crear el usuario
         try:
-            data = json.loads(request.body)
-            username = data.get('username', '').strip()
-            password1 = data.get('password1', '')
-            password2 = data.get('password2', '')
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Datos inválidos'})
-        
-        # Crear formulario con los datos
-        form_data = {
-            'username': username,
-            'password1': password1,
-            'password2': password2
-        }
-        form = CustomUserCreationForm(form_data)
-        
-        if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            authenticated_user = authenticate(request, username=username, password=password)
-            if authenticated_user is not None:
-                login(request, authenticated_user)
-                return JsonResponse({'success': True, 'redirect': '/usuarios/perfil/'})
-        
-        # Si hay errores, devolver errores en JSON
-        errors = {}
-        for field, field_errors in form.errors.items():
-            errors[field] = list(field_errors)
-        return JsonResponse({'success': False, 'errors': errors})
-    
-    # Solo aceptar peticiones POST con JSON
-    return JsonResponse({'success': False, 'error': 'Método no permitido'})
+            user = User.objects.create_user(username=username, password=password1)
+            # Iniciar sesión automáticamente
+            login(request, user)
+            return JsonResponse({
+                'success': True,
+                'redirect': reverse('usuarios:perfil')
+            })
+        except ValidationError as e:
+            return JsonResponse({
+                'success': False,
+                'error': 'La contraseña debe tener al menos 6 caracteres y no puede ser completamente numérica'
+            })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON'
+        })
 
 @login_required
 def perfil_view(request):
@@ -92,21 +106,36 @@ def amigos_view(request):
 def search_users(request):
     query = request.GET.get('query', '').strip()
     
-    # Si no hay query, mostrar todos los usuarios excepto el actual
-    users = User.objects.exclude(id=request.user.id).exclude(
-        friend_users__user=request.user  # Excluir amigos existentes
-    )
+    # Obtener todos los usuarios excepto el usuario actual
+    users = User.objects.exclude(id=request.user.id)
     
-    # Si hay query, filtrar por el nombre de usuario
+    # Obtener IDs de amigos existentes
+    friend_ids = Friend.objects.filter(
+        Q(user=request.user) | Q(friend=request.user)
+    ).values_list('friend_id', 'user_id').distinct()
+    
+    # Crear un set de IDs de amigos
+    existing_friend_ids = set()
+    for user_id, friend_id in friend_ids:
+        if user_id != request.user.id:
+            existing_friend_ids.add(user_id)
+        if friend_id != request.user.id:
+            existing_friend_ids.add(friend_id)
+    
+    # Excluir amigos existentes
+    users = users.exclude(id__in=existing_friend_ids)
+    
+    # Filtrar por búsqueda si hay query
     if query:
         users = users.filter(username__icontains=query)
     
-    users = users[:10]  # Limitar a 10 resultados
-    
+    # Limitar resultados y formatear respuesta
+    users = users[:10]
     results = [{
         'id': user.id,
         'name': user.username,
-        'initial': user.username[0].upper()
+        'initial': user.username[0].upper(),
+        'date_joined': user.date_joined.strftime('%d/%m/%Y')
     } for user in users]
     
     return JsonResponse({'results': results})
@@ -121,7 +150,10 @@ def add_friend(request, user_id):
         if friend == request.user:
             return JsonResponse({'success': False, 'error': 'Cannot add yourself'})
             
+        # Crear la relación bidireccional de amistad
         Friend.objects.get_or_create(user=request.user, friend=friend)
+        Friend.objects.get_or_create(user=friend, friend=request.user)  # Crear la relación inversa
+        
         return JsonResponse({'success': True})
     except User.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'User not found'})
