@@ -7,6 +7,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm
 import json
+from django.contrib.auth.models import User
+from django.db.models import Q
+from .models import Friend
 
 def login_view(request):
     if request.method == 'POST':
@@ -78,6 +81,50 @@ def registro_view(request):
 @login_required
 def perfil_view(request):
     return render(request, 'usuarios/perfil.html')
+
+@login_required
+def amigos_view(request):
+    # Get current user's friends
+    friends = Friend.objects.filter(user=request.user).select_related('friend')
+    return render(request, 'usuarios/amigos.html', {'friends': friends})
+
+@login_required
+def search_users(request):
+    query = request.GET.get('query', '').strip()
+    
+    # Si no hay query, mostrar todos los usuarios excepto el actual
+    users = User.objects.exclude(id=request.user.id).exclude(
+        friend_users__user=request.user  # Excluir amigos existentes
+    )
+    
+    # Si hay query, filtrar por el nombre de usuario
+    if query:
+        users = users.filter(username__icontains=query)
+    
+    users = users[:10]  # Limitar a 10 resultados
+    
+    results = [{
+        'id': user.id,
+        'name': user.username,
+        'initial': user.username[0].upper()
+    } for user in users]
+    
+    return JsonResponse({'results': results})
+
+@login_required
+def add_friend(request, user_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'})
+        
+    try:
+        friend = User.objects.get(id=user_id)
+        if friend == request.user:
+            return JsonResponse({'success': False, 'error': 'Cannot add yourself'})
+            
+        Friend.objects.get_or_create(user=request.user, friend=friend)
+        return JsonResponse({'success': True})
+    except User.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'User not found'})
 
 def logout_view(request):
     logout(request)

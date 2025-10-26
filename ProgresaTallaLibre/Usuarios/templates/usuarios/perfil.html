@@ -340,7 +340,7 @@
                         alert('Funcionalidad de competencias próximamente');
                         break;
                     case 'amigos':
-                        alert('Funcionalidad de amigos próximamente');
+                        window.location.href = '{% url "usuarios:amigos" %}';
                         break;
                 }
             });
