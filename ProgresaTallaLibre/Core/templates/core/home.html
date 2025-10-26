@@ -24,7 +24,11 @@
                 <div class="separador">
                 <a href="#quienes-somos">¿QUIENES SOMOS?</a>
                 <a href="{% url 'lista_cursos' %}">PROGRAMAS</a>
-                <a href="#auth-modal" class="js-open-auth">TU PERFIL</a>
+                {% if is_authenticated %}
+                    <a href="{% url 'usuarios:perfil' %}">TU PERFIL</a>
+                {% else %}
+                    <a href="#auth-modal" class="js-open-auth">TU PERFIL</a>
+                {% endif %}
                 </div>
             </nav>
 
@@ -42,7 +46,11 @@
             
                 <!-- Botón de inscripción -->
                 <div class="button-box">
+                    {% if is_authenticated %}
+                        <a href="{% url 'lista_cursos' %}" class="cta-button">Ver Cursos</a>
+                    {% else %}
                         <a href="#" class="cta-button js-open-auth">Inscríbete</a>
+                    {% endif %}
                 </div>
             </header>
             <!-- Logo en la esquina inferior derecha -->
@@ -123,6 +131,18 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Agrega esto justo después del div.logo-bottom si quieres mostrar un botón de logout -->
+            {% if is_authenticated %}
+            <div class="user-menu">
+                <a href="{% url 'usuarios:perfil' %}" class="user-profile-link">
+                    {{ user.username }}
+                </a>
+                <a href="{% url 'usuarios:logout' %}" class="logout-link">
+                    Cerrar Sesión
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
