@@ -11,6 +11,50 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<!-- Asegurar misma fuente que en lista_cursos y estilos para el título -->
+<style>
+    /* Coincide con lista_cursos: usar Alice para todo el home */
+    body, .title-primary, .title-secondary, .page-title {
+        font-family: 'Alice', serif !important;
+    }
+
+        /* Títulos más gruesos y con animación */
+        /* Evitar recorte de descendentes (g, y, p) asegurando overflow visible y suficiente line-height */
+        .title-block, .title-row {
+            overflow: visible !important;
+        }
+
+        .title-primary, .title-secondary {
+            display: inline-block; /* permite transform */
+            font-weight: 900; /* más grueso */
+            letter-spacing: 1px;
+            line-height: 1.05; /* evita cortar las descendentes */
+            padding-bottom: 0.06em; /* pequeño espacio para descender */
+            text-shadow: 0 6px 24px rgba(0,0,0,0.35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(90deg, #ffffff 0%, #ffe29f 45%, #ffffff 70%);
+            background-size: 200% 100%;
+            animation: titleShimmer 3s linear infinite, titlePop 4s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        /* Slightly different timing for the secondary word to create a staggered effect */
+        .title-secondary {
+            animation-duration: 3.5s, 4.5s;
+        }
+
+        @keyframes titleShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes titlePop {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.03); }
+        }
+</style>
 </head>
 <body{% if messages %} data-has-messages="true"{% endif %}>
 
