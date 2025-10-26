@@ -142,7 +142,8 @@ html, body {
     background: #0a0a0a;
     border: 2px solid #ffffff;
     color: #ffffff;
-    margin-top: clamp(30px, 4.5vw, 100px);
+    /* Reducido para evitar que el botón se solape con el fondo inferior en pantallas grandes */
+    margin-top: clamp(10px, 2.5vw, 40px);
     padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1.2rem, 2vw, 3rem);
     font-size: clamp(20px, 2vw, 80px);
     border-radius: 50px;
