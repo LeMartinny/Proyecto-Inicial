@@ -8,3 +8,6 @@ class Friend(models.Model):
 
     class Meta:
         unique_together = ['user', 'friend']
+
+    def __str__(self):
+        return f"{self.user.username} -> {self.friend.username}"

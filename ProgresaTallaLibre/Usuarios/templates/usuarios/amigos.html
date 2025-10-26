@@ -371,6 +371,7 @@
     </style>
 </head>
 <body>
+    {% csrf_token %}
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -414,7 +415,7 @@
         {% if friends %}
             friendsList.innerHTML = `
                 {% for friendship in friends %}
-                <div class="friend-card">
+                <div class="friend-card" data-friend-id="{{ friendship.friend.id }}">
                     <div class="friend-avatar">{{ friendship.friend.username|slice:":1"|upper }}</div>
                     <div class="friend-info">
                         <div class="friend-name">{{ friendship.friend.username }}</div>
@@ -506,22 +507,34 @@
         }
         
         try {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const response = await fetch(`/usuarios/remove_friend/${userId}/`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-CSRFToken': csrfToken,
                 }
             });
+            
             const data = await response.json();
             
             if (data.success) {
-                location.reload(); // Recargar para actualizar la lista
+                // Eliminar la tarjeta del amigo sin recargar la página
+                const friendCard = document.querySelector(`[data-friend-id="${userId}"]`);
+                if (friendCard) {
+                    friendCard.remove();
+                    
+                    // Si no quedan amigos, mostrar mensaje
+                    const friendsList = document.getElementById('friendsList');
+                    if (!friendsList.children.length) {
+                        friendsList.innerHTML = '<p>Aún no tienes amigos agregados</p>';
+                    }
+                }
             } else {
-                alert(data.error || 'Error al eliminar amigo');
+                throw new Error(data.error || 'Error al eliminar amigo');
             }
         } catch (err) {
             console.error('Error:', err);
-            alert('Error al eliminar amigo');
+            alert('Error al eliminar amigo: ' + err.message);
         }
     }
 

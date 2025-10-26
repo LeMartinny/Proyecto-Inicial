@@ -133,10 +133,20 @@ def remove_friend(request, user_id):
         
     try:
         friend = User.objects.get(id=user_id)
-        Friend.objects.filter(user=request.user, friend=friend).delete()
-        return JsonResponse({'success': True})
+        friendship = Friend.objects.filter(
+            Q(user=request.user, friend=friend) | 
+            Q(user=friend, friend=request.user)
+        )
+        
+        if friendship.exists():
+            friendship.delete()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'Amistad no encontrada'})
     except User.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'User not found'})
+        return JsonResponse({'success': False, 'error': 'Usuario no encontrado'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 def logout_view(request):
     logout(request)
