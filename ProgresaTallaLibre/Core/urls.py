@@ -1,10 +1,10 @@
 from django.urls import path
-from Core import views as core_views
+from . import views  # o core_views si las vistas están en core/views.py
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', core_views.home, name='home_core'),  # ruta para la página principal
+    path('', views.home, name='home_core'),  # Página principal
 ]
 
 if settings.DEBUG:

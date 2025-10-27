@@ -1,0 +1,569 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tus Amigos</title>
+    
+    <!-- Fuente Alice -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Alice', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .volver-btn {
+            padding: 0.8rem 2rem;
+            background: white;
+            color: #764ba2;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .volver-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Search Section */
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative; /* Añadido */
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0; /* Cambiado de 1.5rem a 0 */
+            width: 100%;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-btn {
+            padding: 1rem 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        /* Friends List */
+        .friends-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .friends-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .friend-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            justify-content: space-between;
+            padding-right: 1rem;
+        }
+        
+        .friend-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .friend-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .friend-info {
+            flex: 1;
+            margin-right: 1rem;
+        }
+        
+        .friend-name {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.3rem;
+        }
+        
+        .friend-status {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .friend-action {
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .friend-action:hover {
+            color: #764ba2;
+        }
+        
+        /* Search Results */
+        .search-results {
+            margin-top: 1rem; /* Espacio entre la barra y los resultados */
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 10px;
+            background: #f8fafc; /* Color de fondo más suave */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .search-results.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        
+        @keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Estilo para resultados vacíos */
+        .search-results p {
+            padding: 1rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        /* Mejora la apariencia del scrollbar */
+        .search-results::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .search-results::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .search-results::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .search-results::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+        
+        .result-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
+        }
+        
+        .result-card:last-child {
+            border-bottom: none;
+        }
+        
+        .result-card:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .add-friend-btn {
+            padding: 0.5rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .add-friend-btn:hover {
+            background: #764ba2;
+            transform: translateY(-1px);
+        }
+        
+        .remove-friend-btn {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+        }
+        
+        .remove-friend-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+        }
+        
+        .remove-friend-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.5;
+        }
+        
+        /* Ajustar el espaciado en la friend-card */
+        .friend-card {
+            justify-content: space-between;
+            padding-right: 1rem;
+        }
+        
+        .friend-info {
+            flex: 1;
+            margin-right: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                width: 100%;
+            }
+            
+            .friends-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% csrf_token %}
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'img/logo.png' %}?v=1" alt="Logo Progresa">
+            </a>
+            <a href="{% url 'usuarios:perfil' %}" class="volver-btn">Volver al Perfil</a>
+        </div>
+        
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <input type="text" 
+                       class="search-input" 
+                       placeholder="Buscar usuarios por nombre..."
+                       id="searchInput">
+                <button class="search-btn" id="searchBtn">Buscar</button>
+            </div>
+            
+            <!-- Search Results -->
+            <div class="search-results" id="searchResults">
+                <!-- Results will be inserted here by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Friends List -->
+        <div class="friends-section">
+            <h2 class="section-title">Tus Amigos</h2>
+            <div class="friends-list" id="friendsList">
+                <!-- Example friend cards - Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+<!-- ...existing header code... -->
+
+<script>
+    // Render friends list
+    function renderFriends() {
+        const friendsList = document.getElementById('friendsList');
+        {% if friends %}
+            friendsList.innerHTML = `
+                {% for friendship in friends %}
+                <div class="friend-card" data-friend-id="{{ friendship.friend.id }}">
+                    <div class="friend-avatar">{{ friendship.friend.username|slice:":1"|upper }}</div>
+                    <div class="friend-info">
+                        <div class="friend-name">{{ friendship.friend.username }}</div>
+                        <div class="friend-status">Miembro desde {{ friendship.friend.date_joined|date:"d/m/Y" }}</div>
+                    </div>
+                    <button class="remove-friend-btn" onclick="removeFriend({{ friendship.friend.id }})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                {% endfor %}
+            `;
+        {% else %}
+            friendsList.innerHTML = '<p>Aún no tienes amigos agregados</p>';
+        {% endif %}
+    }
+
+    // Search users function
+    async function searchUsers(query = '') {
+        try {
+            const response = await fetch(`/usuarios/search_users/?query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            const searchResults = document.getElementById('searchResults');
+            if (data.results.length > 0) {
+                searchResults.innerHTML = data.results.map(user => `
+                    <div class="result-card">
+                        <div class="friend-avatar">${user.initial}</div>
+                        <div class="friend-info">
+                            <div class="friend-name">${user.name}</div>
+                            <div class="friend-status">Miembro desde ${user.date_joined}</div>
+                        </div>
+                        <button class="add-friend-btn" onclick="addFriend(${user.id})">
+                            Agregar
+                        </button>
+                    </div>
+                `).join('');
+            } else {
+                searchResults.innerHTML = '<p>No se encontraron usuarios</p>';
+            }
+            searchResults.classList.add('show');
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Error al buscar usuarios');
+        }
+    }
+
+    // Debounce function
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Add friend
+    async function addFriend(userId) {
+        try {
+            const response = await fetch(`/usuarios/add_friend/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                alert('Amigo agregado exitosamente');
+                location.reload(); // Refresh to show new friend
+            } else {
+                alert(data.error || 'Error al agregar amigo');
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Error al agregar amigo');
+        }
+    }
+
+    // Remove friend
+    async function removeFriend(userId) {
+        if (!confirm('¿Estás seguro de que quieres eliminar a este amigo?')) {
+            return;
+        }
+        
+        try {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const response = await fetch(`/usuarios/remove_friend/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Eliminar la tarjeta del amigo sin recargar la página
+                const friendCard = document.querySelector(`[data-friend-id="${userId}"]`);
+                if (friendCard) {
+                    friendCard.remove();
+                    
+                    // Si no quedan amigos, mostrar mensaje
+                    const friendsList = document.getElementById('friendsList');
+                    if (!friendsList.children.length) {
+                        friendsList.innerHTML = '<p>Aún no tienes amigos agregados</p>';
+                    }
+                }
+            } else {
+                throw new Error(data.error || 'Error al eliminar amigo');
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Error al eliminar amigo: ' + err.message);
+        }
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        renderFriends();
+        
+        // Mostrar todos los usuarios al hacer click en el input
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('click', () => {
+            searchUsers();
+        });
+        
+        // Búsqueda al escribir con debounce
+        searchInput.addEventListener('input', debounce((e) => {
+            const query = e.target.value.trim();
+            searchUsers(query);
+        }, 300));
+        
+        // Cerrar resultados al hacer click fuera
+        document.addEventListener('click', (e) => {
+            const searchResults = document.getElementById('searchResults');
+            const searchSection = document.querySelector('.search-section');
+            if (!searchSection.contains(e.target)) {
+                searchResults.classList.remove('show');
+            }
+        });
+    });
+</script>
+</body>
+</html>
