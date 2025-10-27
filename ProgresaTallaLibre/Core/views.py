@@ -1,7 +1,9 @@
 from django.shortcuts import render
-import time
+from django.contrib.auth.decorators import login_required
 
 def home(request):
-    return render(request, "core/home.html")
-
-#def inscribirse(request):
+    context = {
+        'user': request.user,
+        'is_authenticated': request.user.is_authenticated
+    }
+    return render(request, "core/home.html", context)
