@@ -82,3 +82,6 @@ def perfil_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+def mi_cursos(request):
+    return render(request, 'usuarios/micursos.html')

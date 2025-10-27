@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Cursos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .btn-volver {
+            background: rgba(66, 133, 244, 0.1);
+            color: #4285F4;
+            border: 2px solid #4285F4;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .btn-volver:hover {
+            background: #4285F4;
+            color: white;
+            transform: translateX(-3px);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+
+        .cursos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .curso-card {
+            background: #2a2a2a;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #3a3a3a;
+        }
+
+        .curso-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(100, 181, 246, 0.3);
+            border-color: #64B5F6;
+        }
+
+        .curso-imagen {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64B5F6;
+            font-size: 3em;
+            border-bottom: 2px solid #3a3a3a;
+        }
+
+        .curso-contenido {
+            padding: 20px;
+        }
+
+        .curso-titulo {
+            font-size: 1.4em;
+            color: white;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .curso-descripcion {
+            color: #b0b0b0;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .curso-progreso {
+            margin-top: 15px;
+        }
+
+        .progreso-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #b0b0b0;
+            margin-bottom: 8px;
+        }
+
+        .progreso-bar {
+            width: 100%;
+            height: 8px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progreso-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #64B5F6 0%, #90CAF9 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .curso-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+            color: #b0b0b0;
+        }
+
+        .empty-state {
+            background: #2a2a2a;
+            padding: 60px 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #3a3a3a;
+        }
+
+        .empty-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h2 {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: #b0b0b0;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-inscribir {
+            background: #64B5F6;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-inscribir:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.5);
+            background: #90CAF9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .badge-activo {
+            background: rgba(100, 181, 246, 0.2);
+            color: #64B5F6;
+            border: 1px solid #64B5F6;
+        }
+
+        .badge-completado {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+            border: 1px solid #2196F3;
+        }
+
+        @media (max-width: 768px) {
+            .cursos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="btn-volver" onclick="volverAtras()">
+                <span>←</span>
+                <span>Volver al Perfil</span>
+            </button>
+            <h1>📚 Mis Cursos</h1>
+            <p>Gestiona y continúa tu aprendizaje en economía</p>
+        </div>
+
+        <div id="cursosContainer"></div>
+    </div>
+
+    <script>
+        // Datos de ejemplo - Aquí se conectarán los cursos inscritos
+        let cursosInscritos = [];
+
+        // Función para renderizar los cursos
+        function renderizarCursos() {
+            const container = document.getElementById('cursosContainer');
+            
+            if (cursosInscritos.length === 0) {
+                // Mostrar estado vacío
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📖</div>
+                        <h2>No tienes cursos inscritos</h2>
+                        <p>Comienza tu viaje de aprendizaje inscribiéndote en alguno de nuestros cursos de economía. Tenemos contenido para todos los niveles.</p>
+                        <button class="btn-inscribir" onclick="irAInscribir()">Explorar Cursos</button>
+                    </div>
+                `;
+            } else {
+                // Mostrar cursos inscritos
+                const cursosHTML = cursosInscritos.map(curso => `
+                    <div class="curso-card" onclick="abrirCurso('${curso.id}')">
+                        <div class="curso-imagen">${curso.icono || '📊'}</div>
+                        <div class="curso-contenido">
+                            <h3 class="curso-titulo">${curso.titulo}</h3>
+                            <p class="curso-descripcion">${curso.descripcion}</p>
+                            
+                            <span class="badge ${curso.progreso === 100 ? 'badge-completado' : 'badge-activo'}">
+                                ${curso.progreso === 100 ? 'Completado' : 'En progreso'}
+                            </span>
+                            
+                            <div class="curso-progreso">
+                                <div class="progreso-label">
+                                    <span>Progreso</span>
+                                    <span><strong>${curso.progreso}%</strong></span>
+                                </div>
+                                <div class="progreso-bar">
+                                    <div class="progreso-fill" style="width: ${curso.progreso}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="curso-info">
+                                <div class="info-item">
+                                    <span>⏱️</span>
+                                    <span>${curso.duracion}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span>📝</span>
+                                    <span>${curso.lecciones} lecciones</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                container.innerHTML = `<div class="cursos-grid">${cursosHTML}</div>`;
+            }
+        }
+
+        // Función para ir a la página de inscribir cursos
+        function irAInscribir() {
+            alert('Redirigiendo a Inscribir Cursos...\n(Aquí se conectará con la otra página)');
+            // window.location.href = 'inscribir-cursos.html';
+        }
+
+        // Función para volver atrás
+        function volverAtras() {
+            alert('Volviendo al perfil...\n(Aquí se conectará con la página del perfil)');
+            // window.history.back();
+            // o también: window.location.href = 'perfil.html';
+        }
+
+        // Función para abrir un curso específico
+        function abrirCurso(id) {
+            alert(`Abriendo curso ID: ${id}\n(Aquí se conectará con la página del curso)`);
+            // window.location.href = `curso.html?id=${id}`;
+        }
+
+        // Función para agregar un curso (se usará desde la página de inscripción)
+        function agregarCurso(curso) {
+            cursosInscritos.push({
+                id: curso.id || Date.now(),
+                titulo: curso.titulo,
+                descripcion: curso.descripcion,
+                icono: curso.icono || '📊',
+                progreso: curso.progreso || 0,
+                duracion: curso.duracion || '4 horas',
+                lecciones: curso.lecciones || 12
+            });
+            
+            // Guardar en localStorage para persistencia
+            localStorage.setItem('cursosInscritos', JSON.stringify(cursosInscritos));
+            renderizarCursos();
+        }
+
+        // Cargar cursos del localStorage al iniciar
+        function cargarCursos() {
+            const cursosGuardados = localStorage.getItem('cursosInscritos');
+            if (cursosGuardados) {
+                cursosInscritos = JSON.parse(cursosGuardados);
+            }
+        }
+
+        // Inicializar la página
+        cargarCursos();
+        renderizarCursos();
+    </script>
+</body>
+</html>
