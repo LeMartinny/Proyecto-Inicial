@@ -69,6 +69,14 @@ html, body {
     gap: clamp(25px, 6vw, 96px);
 }
 
+.tuperfillink{
+    display:flex;
+}
+
+body.authenticated a.tuperfillink{
+    display: none !important;
+}
+
 .right-section nav a {
     text-decoration: underline;
     color: #A18262;
@@ -82,57 +90,58 @@ html, body {
 /* ---------------------
  BLOQUE DE TITULOS
  ----------------------*/
-.title-block{
-    flex-grow: 1;
+/* Consolidated title block */
+.title-block {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: clamp(15px, 1.6vw, 30px); /* separación vertical */
     width: 100%;
-    text-align: center; 
+    gap: clamp(15px, 1.5vw, 25px);
+    text-align: center;
     margin: 0;
+    overflow: visible !important;
 }
 
-.title-row{
+.title-row {
     display: flex;
     width: 100%;
 }
 
-/* Fila del PRIMARIO: izquierda */
-.title-row-primary{
-    justify-content: flex-start;
-    padding-left: 4vw; 
-}
+/* fila izquierda / derecha: sólo posicionamiento */
+.title-row-primary { justify-content: flex-start; padding-left: 4vw; }
+.title-row-secondary { justify-content: flex-end; padding-right: 4vw; }
 
-/* Fila del SECUNDARIO: derecha */
-.title-row-secondary{
-    justify-content: flex-end;
-    padding-right: 4vw;
-}
-
-/* Estilos visuales de los textos */
-.title-primary{
-    margin-top: clamp(38px, 8.2vw, 150px);
+/* estilos tipográficos (sin duplicados) */
+.title-primary, .title-secondary {
     display: inline-block;
     font-size: clamp(64px, 12.5vw, 256px);
-    line-height: 1;
-    letter-spacing: -0.02rem;
-    color: #000;
-    text-decoration: underline;
-    text-decoration-thickness: 6px;
-    text-underline-offset: 6px;
-    white-space: nowrap; 
+    font-weight: 900;
+    letter-spacing: 1px;
+    line-height: 1.05;
+    padding-bottom: 0.5vw;
+    text-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(90deg, #ffffff 0%, #ffe29f 45%, #ffffff 70%);
+    background-size: 200% 100%;
+    animation: titleShimmer 3s linear infinite, titlePop 4s ease-in-out infinite;
+    transform-origin: center bottom;
 }
-.title-secondary{
-    display: inline-block;
-    font-size: clamp(64px, 12vw, 256px);
-    line-height: 1;
-    letter-spacing: -0.02rem;
-    color: #000;
-    text-decoration: underline;
-    text-decoration-thickness: 6px;
-    text-underline-offset: 6px;
-    white-space: nowrap; 
+
+/* Slightly different timing for the secondary word to create a staggered effect */
+.title-secondary {
+    animation-duration: 3.5s, 4.5s;
+}
+
+@keyframes titleShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes titlePop {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-6px) scale(1.03); }
 }
 
 /* Botón */
@@ -143,7 +152,8 @@ html, body {
     border: 2px solid #ffffff;
     color: #ffffff;
     /* Reducido para evitar que el botón se solape con el fondo inferior en pantallas grandes */
-    margin-top: clamp(10px, 2.5vw, 40px);
+    margin-top: clamp(15px, 2.6vw, 50px);
+    margin-bottom: clamp(15px, 2.6vw, 40px) ;
     padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1.2rem, 2vw, 3rem);
     font-size: clamp(20px, 2vw, 80px);
     border-radius: 50px;
