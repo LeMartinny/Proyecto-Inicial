@@ -45,7 +45,7 @@ html, body {
     align-items: flex-start; /* Empieza desde div pagina izq */
 
     min-height: auto;
-    position: relative;
+    position: relative; /* para que .user-menu con position:absolute quede en la esquina sin afectar el flujo */
     overflow: hidden;
     padding: 0;
 }
@@ -54,19 +54,44 @@ html, body {
 .right-section nav {
     width: 100%;
     display: flex;
-    justify-content: space-evenly; 
-    align-items: center;
+    font-size: clamp(20px, 1.5vw, 40px);
+    align-items: flex-start;
     gap: 100px;
-    font-size: clamp(16px, 1.4vw, 32px);
     margin-top: 25px;
     background: transparent;
-    color: #fff;
-    text-align: center;
+    color: #A18262; /* color café: mantener igual que .user-profile-link */
+    text-align: left;
+    position: relative; /* para que .user-menu con position:absolute quede en la esquina sin afectar el flujo */
+    justify-content: flex-start; /* empezar desde la izquierda */
+    padding-left: 2rem; /* pequeño margen izquierdo para separación */
+}
+ 
+/* enlaces del navbar heredan el color café y tienen hover consistente */
+.right-section nav a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.18s ease;
 }
 
-.separador{
+.right-section nav a:hover,
+.right-section nav a:focus {
+    color: #8b6552; /* tono más oscuro para hover */
+}
+
+/* asegurar que el separador no fuerce color distinto */
+.separador a {
+    color: inherit;
+}
+
+.user-menu{
+    margin-right: 30px;
+}
+
+.separador {
     display: flex;
-    gap: clamp(25px, 6vw, 96px);
+    gap: clamp(18px, 4vw, 64px);
+    margin: 0; /* mantener alineación a la izquierda por defecto */
+    justify-content: flex-start;
 }
 
 .tuperfillink{
@@ -77,14 +102,10 @@ body.authenticated a.tuperfillink{
     display: none !important;
 }
 
-.right-section nav a {
-    text-decoration: underline;
-    color: #A18262;
-    transition: opacity 0.3s ease;
-}
-
-.right-section nav a:hover {
-  opacity: 0.8;
+/* Restaurar centrado cuando NO está autenticado */
+body:not(.authenticated) .separador {
+    margin: 0 auto;
+    justify-content: center;
 }
 
 /* ---------------------
@@ -538,7 +559,6 @@ body.authenticated a.tuperfillink{
     min-height: 100vh;
     /* Imagen de fondo */
     background-image: url('../img/fondousm.jpg');
-    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed; /* Efecto parallax opcional */
@@ -549,18 +569,6 @@ body.authenticated a.tuperfillink{
     position: relative;
 }
 
-/* Overlay oscuro sobre la imagen para mejor contraste */
-.izquierda2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Ajusta la opacidad aquí (0.4 = 40% oscuro) */
-    pointer-events: none;
-    z-index: 1;
-}
 
 /* === CONTENEDOR DE MARCOS === */
 .marcos-container {
@@ -776,6 +784,8 @@ body.authenticated a.tuperfillink{
     display: flex;
     gap: 1rem;
     align-items: center;
+    margin-right: 50px;
+    font-size: clamp(20px, 1vw, 30px);
     background: rgba(255, 255, 255, 0.1);
     padding: 0.5rem 1rem;
     border-radius: 50px;

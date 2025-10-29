@@ -38,6 +38,13 @@
                 </div>
             </nav>
 
+            {% if user.is_authenticated %}
+                <div class="user-menu">
+                    <a href="{% url 'usuarios:perfil' %}" class="user-profile-link">{{ user.username }}</a>
+                    <a href="{% url 'usuarios:logout' %}" class="logout-link">Cerrar Sesión</a>
+                </div>
+            {% endif %}
+
             <!-- Bloque de títulos: todo el bloque está alineado a la izquierda del contenedor -->
             <header class="title-block">
                 <!-- fila 1: primario a la izquierda -->
@@ -62,117 +69,6 @@
             <!-- Logo en la esquina inferior derecha -->
             <div class="logo-bottom">
             </div>     
-            
-            <!-- Auth Modal Overlay -->
-            <div id="auth-modal" class="auth-overlay hidden">
-                <div class="auth-backdrop" data-close-auth></div>
-                
-                <div class="auth-container">
-                    <button class="auth-close" data-close-auth>&times;</button>
-
-                    <!-- Login Header -->
-                    <div class="login-header">
-                        <h1 class="auth-title">Iniciar Sesión</h1>
-                        <p class="auth-subtitle">Bienvenido de vuelta</p>
-                    </div>
-
-                    <!-- Login Form -->
-                    <form class="login-form">
-                        <div class="modern-input-group">
-                            <label for="login-username" class="modern-label">Usuario</label>
-                            <input id="login-username" name="username" type="text" required class="modern-input" placeholder="Ingresa tu usuario" />
-                        </div>
-
-                        <div class="modern-input-group">
-                            <label for="login-password" class="modern-label">Contraseña</label>
-                            <div class="password-input-wrapper">
-                                <input id="login-password" name="password" type="password" required class="modern-input" placeholder="Ingresa tu contraseña" />
-                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('login-password', this)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="modern-checkbox-group">
-                            <input id="remember" type="checkbox" class="modern-checkbox" name="remember">
-                            <label for="remember" class="modern-checkbox-label">Recordarme</label>
-                        </div>
-
-                        <button type="submit" class="modern-button">Entrar</button>
-
-                        <div class="auth-links">
-                            <p>¿No tienes cuenta? 
-                                <button type="button" class="modern-button">Regístrate aquí</button>
-                            </p>
-                            <p><a href="#HomePage" class="modern-link" data-close-auth>← Volver al inicio</a></p>
-                        </div>
-                    </form>
-
-                    <!-- Register Header -->
-                    <div class="register-header hidden">
-                        <h1 class="auth-title">Registrarse</h1>
-                        <p class="auth-subtitle">Únete a nuestra comunidad</p>
-                    </div>
-
-                    <!-- Register Form -->
-                    <form class="register-form hidden">
-                        <div class="modern-input-group">
-                            <label for="signup-username" class="modern-label">Usuario</label>
-                            <input id="signup-username" name="username" type="text" required class="modern-input" placeholder="Elige un usuario" />
-                        </div>
-
-                        <div class="modern-input-group">
-                            <label for="signup-password1" class="modern-label">Contraseña</label>
-                            <div class="password-input-wrapper">
-                                <input id="signup-password1" name="password1" type="password" required class="modern-input" placeholder="Crea una contraseña" />
-                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signup-password1', this)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="modern-input-group">
-                            <label for="signup-password2" class="modern-label">Confirmar Contraseña</label>
-                            <div class="password-input-wrapper">
-                                <input id="signup-password2" name="password2" type="password" required class="modern-input" placeholder="Confirma tu contraseña" />
-                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signup-password2', this)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="modern-button">Registrarme</button>
-
-                        <div class="auth-links">
-                            <p>¿Ya tienes cuenta? 
-                                <button type="button" class="modern-button">Inicia sesión aquí</button>
-                            </p>
-                            <p><a href="#HomePage" class="modern-link" data-close-auth>← Volver al inicio</a></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Agrega esto justo después del div.logo-bottom si quieres mostrar un botón de logout -->
-            {% if user.is_authenticated %}
-                <div class="user-menu">
-                    <a href="{% url 'usuarios:perfil' %}" class="user-profile-link">
-                        {{ user.username }}
-                    </a>
-                    <a href="{% url 'usuarios:logout' %}" class="logout-link">
-                        Cerrar Sesión
-                    </a>
-                </div>
-            {% endif %}
         </div>
     </div>
 </div>
@@ -221,8 +117,106 @@
     </div>
 </div>
 
+<div id="auth-modal" class="auth-overlay hidden">
+    <div class="auth-backdrop" data-close-auth></div>
+
+    <div class="auth-container">
+        <button class="auth-close" data-close-auth>&times;</button>
+
+        <!-- Login Header -->
+        <div class="login-header">
+            <h1 class="auth-title">Iniciar Sesión</h1>
+            <p class="auth-subtitle">Bienvenido de vuelta</p>
+        </div>
+
+        <!-- Login Form -->
+        <form class="login-form">
+            <div class="modern-input-group">
+                <label for="login-username" class="modern-label">Usuario</label>
+                <input id="login-username" name="username" type="text" required class="modern-input" placeholder="Ingresa tu usuario" />
+            </div>
+
+            <div class="modern-input-group">
+                <label for="login-password" class="modern-label">Contraseña</label>
+                <div class="password-input-wrapper">
+                    <input id="login-password" name="password" type="password" required class="modern-input" placeholder="Ingresa tu contraseña" />
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('login-password', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modern-checkbox-group">
+                <input id="remember" type="checkbox" class="modern-checkbox" name="remember">
+                <label for="remember" class="modern-checkbox-label">Recordarme</label>
+            </div>
+
+            <button type="submit" class="modern-button">Entrar</button>
+
+            <div class="auth-links">
+                <p>¿No tienes cuenta? 
+                    <button type="button" class="modern-button">Regístrate aquí</button>
+                </p>
+                <p><a href="#HomePage" class="modern-link" data-close-auth>← Volver al inicio</a></p>
+            </div>
+        </form>
+
+        <!-- Register Header -->
+        <div class="register-header hidden">
+            <h1 class="auth-title">Registrarse</h1>
+            <p class="auth-subtitle">Únete a nuestra comunidad</p>
+        </div>
+
+        <!-- Register Form -->
+        <form class="register-form hidden">
+            <div class="modern-input-group">
+                <label for="signup-username" class="modern-label">Usuario</label>
+                <input id="signup-username" name="username" type="text" required class="modern-input" placeholder="Elige un usuario" />
+            </div>
+
+            <div class="modern-input-group">
+                <label for="signup-password1" class="modern-label">Contraseña</label>
+                <div class="password-input-wrapper">
+                    <input id="signup-password1" name="password1" type="password" required class="modern-input" placeholder="Crea una contraseña" />
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signup-password1', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modern-input-group">
+                <label for="signup-password2" class="modern-label">Confirmar Contraseña</label>
+                <div class="password-input-wrapper">
+                    <input id="signup-password2" name="password2" type="password" required class="modern-input" placeholder="Confirma tu contraseña" />
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signup-password2', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="modern-button">Registrarme</button>
+
+            <div class="auth-links">
+                <p>¿Ya tienes cuenta? 
+                    <button type="button" class="modern-button">Inicia sesión aquí</button>
+                </p>
+                <p><a href="#HomePage" class="modern-link" data-close-auth>← Volver al inicio</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
-(function() {
+document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('auth-modal');
     const openers = document.querySelectorAll('.js-open-auth');
     const closers = document.querySelectorAll('[data-close-auth]');
@@ -232,10 +226,11 @@
     const loginHeader = document.querySelector('.login-header');
     const homeLinks = document.querySelectorAll('.auth-links a');
 
-    // === Función para obtener token CSRF desde cookies ===
+    if (!modal) return; // nada que hacer si no existe el modal
+
     function getCSRFToken() {
         const name = 'csrftoken';
-        const cookies = document.cookie.split(';');
+        const cookies = document.cookie ? document.cookie.split(';') : [];
         for (let cookie of cookies) {
             cookie = cookie.trim();
             if (cookie.startsWith(name + '=')) {
@@ -245,64 +240,43 @@
         return '';
     }
 
-    // --- Mostrar sólo login o registro ---
     function showLogin() {
-        loginForm.classList.remove('hidden');
-        loginHeader.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-        registerHeader.classList.add('hidden');
+        if (loginForm) loginForm.classList.remove('hidden');
+        if (loginHeader) loginHeader.classList.remove('hidden');
+        if (registerForm) registerForm.classList.add('hidden');
+        if (registerHeader) registerHeader.classList.add('hidden');
     }
 
     function showSignup() {
-        registerForm.classList.remove('hidden');
-        registerHeader.classList.remove('hidden');
-        loginForm.classList.add('hidden');
-        loginHeader.classList.add('hidden');
+        if (registerForm) registerForm.classList.remove('hidden');
+        if (registerHeader) registerHeader.classList.remove('hidden');
+        if (loginForm) loginForm.classList.add('hidden');
+        if (loginHeader) loginHeader.classList.add('hidden');
     }
 
-    // --- Toggle Password Visibility ---
-    window.togglePasswordVisibility = function(inputId, button) {
-        const input = document.getElementById(inputId);
-        const icon = button.querySelector('.eye-icon');
-        
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.innerHTML = `
-                <path fill="none" stroke="currentColor" stroke-width="2" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
-                <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/>
-            `;
-        } else {
-            input.type = 'password';
-            icon.innerHTML = `
-                <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
-            `;
-        }
-    }
-
-    // --- Abrir / cerrar modal ---
     function openModal(defaultTab = 'login', subtitle = null) {
-         modal.classList.remove('hidden');
-         modal.classList.add('flex');
-         defaultTab === 'signup' ? showSignup() : showLogin();
-         // Actualizar subtítulo del header de login o register según el tab
-         if (subtitle !== null) {
-             // loginHeader y registerHeader contienen .auth-subtitle en sus bloques
-             if (defaultTab === 'signup') {
-                 const sh = registerHeader.querySelector('.auth-subtitle');
-                 if (sh) sh.textContent = subtitle;
-             } else {
-                 const sh = loginHeader.querySelector('.auth-subtitle');
-                 if (sh) sh.textContent = subtitle;
-             }
-         } else {
-             // Restablecer subtítulos por defecto si no se pasa subtitle
-             const shLogin = loginHeader.querySelector('.auth-subtitle');
-             if (shLogin) shLogin.textContent = 'Bienvenido de vuelta';
-             const shReg = registerHeader.querySelector('.auth-subtitle');
-             if (shReg) shReg.textContent = 'Únete a nuestra comunidad';
-         }
-         document.body.style.overflow = 'hidden';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        defaultTab === 'signup' ? showSignup() : showLogin();
+        if (subtitle !== null) {
+            if (defaultTab === 'signup' && registerHeader) {
+                const sh = registerHeader.querySelector('.auth-subtitle');
+                if (sh) sh.textContent = subtitle;
+            } else if (loginHeader) {
+                const sh = loginHeader.querySelector('.auth-subtitle');
+                if (sh) sh.textContent = subtitle;
+            }
+        } else {
+            if (loginHeader) {
+                const shLogin = loginHeader.querySelector('.auth-subtitle');
+                if (shLogin) shLogin.textContent = 'Bienvenido de vuelta';
+            }
+            if (registerHeader) {
+                const shReg = registerHeader.querySelector('.auth-subtitle');
+                if (shReg) shReg.textContent = 'Únete a nuestra comunidad';
+            }
+        }
+        document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
@@ -311,173 +285,139 @@
         document.body.style.overflow = '';
     }
 
-    // --- Abrir desde botones externos ---
+    // event listeners defensivos
     openers.forEach(el => {
-        el.addEventListener('click', function(e) {
+        el.addEventListener('click', function (e) {
             e.preventDefault();
-            // Prioriza atributos data-* si están presentes
             const defaultTab = el.dataset.defaultTab || (el.textContent.toLowerCase().includes('inscr') ? 'signup' : 'login');
             const subtitle = el.dataset.subtitle || null;
             openModal(defaultTab, subtitle);
         });
     });
 
-    // --- Cerrar desde overlay o "volver al inicio" ---
     closers.forEach(el => el.addEventListener('click', closeModal));
     homeLinks.forEach(link => {
         link.addEventListener('click', e => {
             e.preventDefault();
             closeModal();
             const href = link.getAttribute('href');
-            if (href && href !== '#') {
-                window.location.href = href;
-            }
+            if (href && href !== '#') window.location.href = href;
         });
     });
 
-    // --- SOLO los botones de cambio entre login/registro (NO los de submit) ---
-    // Botón "Regístrate aquí" dentro del login form
-    const switchToRegisterBtn = loginForm.querySelector('.auth-links button');
+    const switchToRegisterBtn = loginForm ? loginForm.querySelector('.auth-links button') : null;
     if (switchToRegisterBtn) {
-        switchToRegisterBtn.addEventListener('click', function(e) {
+        switchToRegisterBtn.addEventListener('click', function (e) {
             e.preventDefault();
             showSignup();
         });
     }
 
-    // Botón "Inicia sesión aquí" dentro del register form
-    const switchToLoginBtn = registerForm.querySelector('.auth-links button');
+    const switchToLoginBtn = registerForm ? registerForm.querySelector('.auth-links button') : null;
     if (switchToLoginBtn) {
-        switchToLoginBtn.addEventListener('click', function(e) {
+        switchToLoginBtn.addEventListener('click', function (e) {
             e.preventDefault();
             showLogin();
         });
     }
 
-    // --- Cerrar modal con tecla Escape ---
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-            closeModal();
-        }
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
     });
 
-    // --- Autoabrir modal si hay errores del servidor ---
-    if (document.body.dataset.hasMessages === 'true') {
-        openModal('login');
+    if (document.body.dataset.hasMessages === 'true') openModal('login');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Entrando...';
+            }
+
+            const usernameEl = document.getElementById('login-username');
+            const passwordEl = document.getElementById('login-password');
+            const username = usernameEl ? usernameEl.value.trim() : '';
+            const password = passwordEl ? passwordEl.value : '';
+
+            try {
+                const response = await fetch("/usuarios/login/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCSRFToken(),
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = data.redirect || "/usuarios/perfil/";
+                } else {
+                    alert(data.error || "Credenciales incorrectas.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error al conectar con el servidor.");
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
     }
 
-    // --- LOGIN AJAX ---
-    loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        console.log('Login submit triggered'); // Debug
-
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Entrando...';
-
-        const username = document.getElementById('login-username').value.trim();
-        const password = document.getElementById('login-password').value;
-
-        try {
-            const response = await fetch("/usuarios/login/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCSRFToken(),
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            const data = await response.json();
-            console.log("Respuesta login:", data);
-
-            if (data.success) {
-                window.location.href = data.redirect || "/usuarios/perfil/";
-            } else {
-                alert(data.error || "Credenciales incorrectas.");
+    if (registerForm) {
+        registerForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Registrando...';
             }
-        } catch (err) {
-            console.error(err);
-            alert("Error al conectar con el servidor.");
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
-        }
-    });
 
-    // --- Toggle Password Visibility ---
-    function togglePasswordVisibility(inputId, button) {
-        const input = document.getElementById(inputId);
-        const icon = button.querySelector('.eye-icon');
-        
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.innerHTML = `
-                <path fill="none" stroke="currentColor" stroke-width="2" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
-                <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/>
-            `;
-        } else {
-            input.type = 'password';
-            icon.innerHTML = `
-                <path fill="none" stroke="currentColor" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="3"/>
-            `;
-        }
+            const usernameEl = document.getElementById('signup-username');
+            const password1El = document.getElementById('signup-password1');
+            const password2El = document.getElementById('signup-password2');
+            const username = usernameEl ? usernameEl.value.trim() : '';
+            const password1 = password1El ? password1El.value : '';
+            const password2 = password2El ? password2El.value : '';
+
+            try {
+                const response = await fetch("/usuarios/registro/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCSRFToken(),
+                    },
+                    body: JSON.stringify({ username, password1, password2 }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = data.redirect || "/usuarios/perfil/";
+                } else if (data.errors) {
+                    const errores = Object.entries(data.errors)
+                        .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
+                        .join('\n');
+                    alert('Errores en el formulario:\n\n' + errores);
+                } else {
+                    alert(data.error || "Error en el registro.");
+                }
+            } catch (err) {
+                console.error('Error en la petición:', err);
+                alert("Error al conectar con el servidor.");
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
     }
-
-    // --- REGISTRO AJAX ---
-    registerForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        console.log('Registro submit triggered'); // Debug
-
-        const submitBtn = registerForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Registrando...';
-
-        const username = document.getElementById('signup-username').value.trim();
-        const password1 = document.getElementById('signup-password1').value;
-        const password2 = document.getElementById('signup-password2').value;
-
-        console.log('Datos a enviar:', { username, password1, password2 }); // Debug
-
-        try {
-            const response = await fetch("/usuarios/registro/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCSRFToken(),
-                },
-                body: JSON.stringify({ username, password1, password2 }),
-            });
-
-            const data = await response.json();
-            console.log("Respuesta registro:", data);
-
-            if (data.success) {
-                window.location.href = data.redirect || "/usuarios/perfil/";
-            } else if (data.errors) {
-                const errores = Object.entries(data.errors)
-                    .map(([field, msgs]) => `${field}: ${msgs.join(', ')}`)
-                    .join('\n');
-                alert('Errores en el formulario:\n\n' + errores);
-            } else {
-                alert(data.error || "Error en el registro.");
-            }
-        } catch (err) {
-            console.error('Error en la petición:', err);
-            alert("Error al conectar con el servidor.");
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
-        }
-    });
-})();
+});
 </script>
-
-<!-- Footer -->
-<footer class="bg-gray-800 text-white text-center p-6 mt-16">
-    &copy; 2025 Progesa Libre
-</footer> 
+</body>
 </html>
