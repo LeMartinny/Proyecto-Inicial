@@ -559,15 +559,29 @@ body:not(.authenticated) .separador {
     min-height: 100vh;
     /* Imagen de fondo */
     background-image: url('../img/fondousm.jpg');
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed; /* Efecto parallax opcional */
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 4rem 2rem;
     position: relative;
 }
 
+/* Overlay oscuro sobre la imagen para mejor contraste */
+.izquierda2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Ajusta la opacidad aquí (0.4 = 40% oscuro) */
+    pointer-events: none;
+    z-index: 1;
+}
 
 /* === CONTENEDOR DE MARCOS === */
 .marcos-container {
