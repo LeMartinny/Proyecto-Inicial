@@ -36,8 +36,6 @@ html, body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -49,6 +47,7 @@ html, body {
     overflow: hidden;
     padding: 0;
 }
+
 
 /* --- NAVBAR --- */
 .right-section nav {
@@ -89,7 +88,7 @@ html, body {
 
 .separador {
     display: flex;
-    gap: clamp(18px, 4vw, 64px);
+    gap: clamp(16px, 3vw, 32px);
     margin: 0; /* mantener alineación a la izquierda por defecto */
     justify-content: flex-start;
 }
@@ -149,6 +148,7 @@ body:not(.authenticated) .separador {
     animation: titleShimmer 3s linear infinite, titlePop 4s ease-in-out infinite;
     transform-origin: center bottom;
 }
+
 
 /* Slightly different timing for the secondary word to create a staggered effect */
 .title-secondary {
@@ -559,15 +559,29 @@ body:not(.authenticated) .separador {
     min-height: 100vh;
     /* Imagen de fondo */
     background-image: url('../img/fondousm.jpg');
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed; /* Efecto parallax opcional */
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 4rem 2rem;
     position: relative;
 }
 
+/* Overlay oscuro sobre la imagen para mejor contraste */
+.izquierda2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Ajusta la opacidad aquí (0.4 = 40% oscuro) */
+    pointer-events: none;
+    z-index: 1;
+}
 
 /* === CONTENEDOR DE MARCOS === */
 .marcos-container {
