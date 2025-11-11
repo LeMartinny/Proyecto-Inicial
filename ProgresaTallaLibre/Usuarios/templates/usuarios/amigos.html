@@ -416,7 +416,7 @@
         {% if friends %}
             friendsList.innerHTML = `
                 {% for friendship in friends %}
-                <div class="friend-card" data-friend-id="{{ friendship.friend.id }}" data-friend-username="{{ friendship.friend.username }}" data-friend-date="{{ friendship.friend.date_joined|date:'d/m/Y' }}">
+                <div class="friend-card" data-friend-id="{{ friendship.friend.id }}" data-friend-username="{{ friendship.friend.username }}" data-friend-date="{{ friendship.friend.date_joined|date:'d/m/Y' }}" data-friend-datetime="{{ friendship.friend.date_joined|date:'d M Y, H:i' }}">
                     <div class="friend-avatar">{{ friendship.friend.username|slice:":1"|upper }}</div>
                     <div class="friend-info">
                         <div class="friend-name">{{ friendship.friend.username }}</div>
@@ -572,7 +572,8 @@
                     // prevent clicks on remove button from opening modal
                     if (e.target.closest('.remove-friend-btn')) return;
                     const username = this.getAttribute('data-friend-username') || this.querySelector('.friend-name')?.textContent;
-                    const date = this.getAttribute('data-friend-date') || this.querySelector('.friend-status')?.textContent.replace('Miembro desde ', '');
+                    // Prefer full datetime (with hour) if available
+                    const date = this.getAttribute('data-friend-datetime') || this.getAttribute('data-friend-date') || this.querySelector('.friend-status')?.textContent.replace('Miembro desde ', '');
                     openFriendModal({username, date});
                 });
             });
