@@ -16,7 +16,7 @@ def lista_cursos(request):
     for curso in cursos:
         curso.esta_inscrito = curso.id in cursos_inscritos
 
-    return render(request, 'Programas_Cursos/cursos.html', {'cursos': cursos})
+    return render(request, 'programas_cursos/lista_cursos.html', {'cursos': cursos})
 
 
 @login_required
@@ -36,5 +36,5 @@ def inscribir_curso(request, codigo):
     else:
         messages.info(request, f"Ya estabas inscrito en el curso: {curso.titulo}.")
 
-    return render(request, "Programas_Cursos/lista_cursos.html", {'curso': curso})
+    return render(request, 'programas_cursos/lista_cursos.html', {'curso': curso})
 
