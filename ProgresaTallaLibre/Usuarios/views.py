@@ -193,25 +193,19 @@ def acerca_de_ti(request):
 
 @login_required
 def mis_cursos(request):
-    """
-    Muestra los cursos en los que el usuario está inscrito.
-    """
-    inscripciones = Inscripcion.objects.filter(usuario=request.user).select_related('curso')
+    # Obtiene todas las inscripciones del usuario
+    inscripciones = Inscripcion.objects.filter(usuario=request.user)
 
-    # Creamos una lista de cursos con info extra para el template
-    cursos_inscritos = []
-    for inscripcion in inscripciones:
-        curso = inscripcion.curso
-        cursos_inscritos.append({
-            'id': curso.id,
-            'titulo': curso.titulo,
-            'descripcion': curso.descripcion,
-            'icono': curso.icono,
-            'progreso': inscripcion.progreso,
-            'completado': inscripcion.completado,
-            'fecha_inscripcion': inscripcion.fecha_inscripcion
-        })
+    # Extrae los cursos de esas inscripciones
+    cursos_inscritos = [inscripcion.curso for inscripcion in inscripciones]
 
-    return render(request, "Programas_Cursos/micursos.html", {
-        'cursos_inscritos': cursos_inscritos
+    # Para cada curso, agregamos datos adicionales de progreso y completado
+    for curso in cursos_inscritos:
+        inscripcion = inscripciones.get(curso=curso)
+        curso.progreso = inscripcion.progreso
+        curso.completado = inscripcion.completado
+        curso.fecha_inscripcion = inscripcion.fecha_inscripcion
+
+    return render(request, "Programas_Cursos/misCursos.html", {
+        "cursos_inscritos": cursos_inscritos
     })
