@@ -1,6 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
-< lang="es">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-
     
     <style>
         * {
@@ -453,11 +450,30 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .inscribir-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .inscribir-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.03);
+        }
+
+        .inscribir-btn.inscrito {
+            background-color: #28a745 !important;
+            color: white;
+            cursor: default;
+        }
     </style>
 </head>
 <body>
-    {% csrf_token %}
-    
     <!-- Overlay de fondo -->
     <div class="overlay" id="overlay"></div>
     
@@ -481,14 +497,14 @@
                     <li>Característica 3</li>
                 </ul>
             </div>
-            <form id="inscribirForm" style="width:100%;">
-                {% csrf_token %}
-                <button onclick="inscribirCurso('{{ curso.codigo }}', this)">Inscribirme</button>
-            </form>
-            <div id="inscribirMensaje"></div>
+            <div class="curso-card" data-curso-codigo="{{ curso.codigo }}">
+                <button class="inscribir-btn" data-curso-codigo="{{ curso.codigo }}">
+                    {% if curso.esta_inscrito %}Curso Inscrito{% else %}Inscribir Curso{% endif %}
+                </button>
+            </div>
         </div>
     </div>
-
+    
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -506,6 +522,7 @@
         
         <!-- Grid de Cursos -->
         <div class="cursos-grid">
+            <!-- Curso 1: Presupuesto Personal -->
             <div class="curso-card" data-curso="presupuesto-personal">
                 <div class="curso-image-container">
                     <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80" 
@@ -519,7 +536,8 @@
                     <p class="curso-subtitle">Aprende a gestionar tus finanzas</p>
                 </div>
             </div>
-
+            
+            <!-- Curso 2: Tipos de Inversión -->
             <div class="curso-card" data-curso="tipos-inversion">
                 <div class="curso-image-container">
                     <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" 
@@ -533,7 +551,8 @@
                     <p class="curso-subtitle">Descubre dónde invertir tu dinero</p>
                 </div>
             </div>
-
+            
+            <!-- Curso 3: Ahorro y Gasto -->
             <div class="curso-card" data-curso="ahorro-gasto">
                 <div class="curso-image-container">
                     <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80" 
@@ -547,7 +566,8 @@
                     <p class="curso-subtitle">Controla tus gastos y ahorra más</p>
                 </div>
             </div>
-
+            
+            <!-- Curso 4: Inflación -->
             <div class="curso-card" data-curso="inflacion">
                 <div class="curso-image-container">
                     <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&q=80" 
@@ -563,63 +583,179 @@
             </div>
         </div>
     </div>
-</body>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".btn-inscribir").forEach(boton => {
-        const codigo = boton.dataset.codigo;
-        verificarEstadoCurso(codigo, boton);
-        boton.addEventListener("click", () => inscribirCurso(codigo, boton));
-    });
-});
-
-async function verificarEstadoCurso(codigo, boton) {
-    try {
-        const response = await fetch(`/cursos/estado-curso-ajax/${codigo}/`);
-        const data = await response.json();
-
-        if (data.inscrito) {
-            boton.textContent = 'Ya estás inscrito ✅';
-            boton.style.backgroundColor = '#4CAF50';
-            boton.disabled = true;
+    
+    <script>
+    // ==============================
+    // Data de los cursos (sin cambios)
+    // ==============================
+    const cursosData = {
+        'presupuesto-personal': {
+            icon: '💰',
+            title: 'Presupuesto Personal',
+            description: 'Domina el arte de gestionar tus finanzas personales con este curso completo...',
+            features: [
+                'Crea presupuestos mensuales efectivos',
+                'Controla ingresos y gastos detalladamente',
+                'Establece metas financieras alcanzables',
+                'Desarrolla hábitos de ahorro sostenibles'
+            ]
+        },
+        'tipos-inversion': {
+            icon: '📈',
+            title: 'Tipos de Inversión',
+            description: 'Explora el mundo de las inversiones...',
+            features: [
+                'Conoce acciones, bonos y fondos mutuos',
+                'Aprende a evaluar riesgos de inversión',
+                'Diversifica tu portafolio efectivamente',
+                'Toma decisiones financieras informadas'
+            ]
+        },
+        'ahorro-gasto': {
+            icon: '🏦',
+            title: 'Ahorro y Gasto',
+            description: 'Desarrolla una relación saludable con el dinero...',
+            features: [
+                'Reduce gastos innecesarios efectivamente',
+                'Identifica y elimina fugas de dinero',
+                'Construye un fondo de ahorro sólido',
+                'Alcanza tus metas financieras rápido'
+            ]
+        },
+        'inflacion': {
+            icon: '📊',
+            title: 'Inflación',
+            description: 'Comprende uno de los conceptos económicos más importantes...',
+            features: [
+                'Entiende cómo funciona la inflación',
+                'Protege tus ahorros del impacto inflacionario',
+                'Comprende indicadores económicos clave',
+                'Toma decisiones en contextos económicos variables'
+            ]
         }
-    } catch (error) {
-        console.error('Error verificando estado del curso:', error);
-    }
-}
+    };
 
-async function inscribirCurso(codigo, boton) {
-    try {
-        const response = await fetch(`/cursos/inscribir-ajax/${codigo}/`, {
-            method: 'POST',
-            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+    const sidePanel = document.getElementById('sidePanel');
+    const overlay = document.getElementById('overlay');
+    const closePanelBtn = document.getElementById('closePanelBtn');
+    const inscribirBtn = document.getElementById('inscribirBtn');
+    let currentCursoId = null;
+
+    // ==============================
+    // Función para abrir el panel
+    // ==============================
+    function openPanel(cursoId) {
+        const curso = cursosData[cursoId];
+        currentCursoId = cursoId;
+
+        document.getElementById('panelIcon').textContent = curso.icon;
+        document.getElementById('panelTitle').textContent = curso.title;
+        document.getElementById('panelDescription').textContent = curso.description;
+
+        const featuresList = document.getElementById('featuresList');
+        featuresList.innerHTML = '';
+        curso.features.forEach(feature => {
+            const li = document.createElement('li');
+            li.textContent = feature;
+            featuresList.appendChild(li);
         });
 
-        if (response.status === 200 || response.status === 202) {
-            boton.textContent = 'Curso inscrito ✅';
-            boton.style.backgroundColor = '#4CAF50';
-            boton.disabled = true;
-        } else {
-            alert('Ocurrió un error inesperado.');
-        }
-    } catch (error) {
-        console.error('Error al inscribir curso:', error);
-    }
-}
+        sidePanel.classList.add('open');
+        overlay.classList.add('show');
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+        document.querySelectorAll('.curso-card').forEach(card => card.classList.remove('active'));
+        document.querySelector(`[data-curso="${cursoId}"]`).classList.add('active');
     }
-    return cookieValue;
-}
+
+    // ==============================
+    // Función para cerrar el panel
+    // ==============================
+    function closePanel() {
+        sidePanel.classList.remove('open');
+        overlay.classList.remove('show');
+        document.querySelectorAll('.curso-card').forEach(card => card.classList.remove('active'));
+    }
+
+    // ==============================
+    // Obtener token CSRF correctamente
+    // ==============================
+    function getCSRFToken() {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        return cookieValue;
+    }
+
+    // ==============================
+    // Lógica de inscripción por curso individual
+    // ==============================
+    document.addEventListener("DOMContentLoaded", () => {
+        const inscribirBtns = document.querySelectorAll(".inscribir-btn");
+
+        btn.addEventListener("click", async () => {
+            const cursoId = btn.dataset.cursoId;
+            if (!cursoId) return alert("Error: curso sin ID.");
+
+            btn.disabled = true;
+            btn.textContent = "Inscribiendo...";
+
+            try {
+                const response = await fetch(`/cursos/inscribir/${cursoId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCSRFToken(),
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+
+                if (data.status === "ok") {
+                    alert("✅ " + data.message);
+
+                    // Solo este botón cambia
+                    btn.textContent = "Curso Inscrito";
+                    btn.classList.add("inscrito");
+                    btn.disabled = true;
+                } else {
+                    alert("⚠️ " + data.message);
+
+                    if (data.message.includes("Ya estás inscrito")) {
+                        btn.textContent = "Curso Inscrito";
+                        btn.classList.add("inscrito");
+                        btn.disabled = true;
+                    } else {
+                        btn.disabled = false;
+                        btn.textContent = "Inscribir Curso";
+                    }
+                }
+            } catch (error) {
+                alert("❌ Error al inscribirse. Inténtalo nuevamente.");
+                console.error(error);
+                btn.disabled = false;
+                btn.textContent = "Inscribir Curso";
+            }
+        });
+    });
+    
+    // ==============================
+    // Listeners generales
+    // ==============================
+    document.querySelectorAll('.curso-card').forEach(card => {
+        card.addEventListener('click', function() {
+            openPanel(this.getAttribute('data-curso'));
+        });
+    });
+
+    closePanelBtn.addEventListener('click', closePanel);
+    overlay.addEventListener('click', closePanel);
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidePanel.classList.contains('open')) {
+            closePanel();
+        }
+    });
 </script>
 </html>

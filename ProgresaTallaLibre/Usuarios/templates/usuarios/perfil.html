@@ -331,7 +331,7 @@
                 
                 switch(action) {
                     case 'cursos':
-                        window.location.href = "{% url 'usuarios:micursos' %}"
+                        window.location.href = "{% url 'usuarios:micursos' %}";
 ;
                         break;
                     case 'inscribir':
@@ -351,7 +351,7 @@
         // Add click functionality to profile card
         document.querySelector('.profile-card').addEventListener('click', function() {
             console.log('Profile card clicked');
-            alert('Funcionalidad de edición de perfil próximamente');
+            window.location.href = "{% url 'usuarios:acercadeti' %}";
         });
     </script>
 </body>

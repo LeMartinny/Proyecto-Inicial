@@ -264,52 +264,53 @@
 
         <div id="cursosContainer">
             {% if cursos_inscritos %}
-                <div class="cursos-grid">
-                    {% for curso in cursos_inscritos %}
-                    <div class="curso-card" onclick="abrirCurso('{{ curso.id }}')">
-                        <div class="curso-imagen">{{ curso.icono }}</div>
-                        <div class="curso-contenido">
-                            <h3 class="curso-titulo">{{ curso.titulo }}</h3>
-                            <p class="curso-descripcion">{{ curso.descripcion|truncatewords:15 }}</p>
-                            
-                            <span class="badge {% if curso.completado %}badge-completado{% else %}badge-activo{% endif %}">
-                                {% if curso.completado %}Completado{% else %}En progreso{% endif %}
-                            </span>
-                            
-                            <div class="curso-progreso">
-                                <div class="progreso-label">
-                                    <span>Progreso</span>
-                                    <span><strong>{{ curso.progreso }}%</strong></span>
-                                </div>
-                                <div class="progreso-bar">
-                                    <div class="progreso-fill" style="width: {{ curso.progreso }}%"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="curso-info">
-                                <div class="info-item">
-                                    <span>📅</span>
-                                    <span>{{ curso.fecha_inscripcion }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span>📝</span>
-                                    <span>En progreso</span>
-                                </div>
-                            </div>
+    <div class="cursos-grid">
+        {% for curso in cursos_inscritos %}
+            <div class="curso-card" onclick="abrirCurso('{{ curso.id }}')">
+                <div class="curso-imagen">{{ curso.icono }}</div>
+                <div class="curso-contenido">
+                    <h3 class="curso-titulo">{{ curso.titulo }}</h3>
+                    <p class="curso-descripcion">{{ curso.descripcion|truncatewords:15 }}</p>
+
+                    <span class="badge {% if curso.completado %}badge-completado{% else %}badge-activo{% endif %}">
+                        {% if curso.completado %}Completado{% else %}En progreso{% endif %}
+                    </span>
+
+                    <div class="curso-progreso">
+                        <div class="progreso-label">
+                            <span>Progreso</span>
+                            <span><strong>{{ curso.progreso }}%</strong></span>
+                        </div>
+                        <div class="progreso-bar">
+                            <div class="progreso-fill" style="width: {{ curso.progreso }}%"></div>
                         </div>
                     </div>
-                    {% endfor %}
+
+                    <div class="curso-info">
+                        <div class="info-item">
+                            <span>📅</span>
+                            <span>{{ curso.fecha_inscripcion }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span>📝</span>
+                            <span>En progreso</span>
+                        </div>
+                    </div>
+
+                    <!-- Botón "Comenzar" -->
+                    <a href="{% url 'cursos:detalle_curso' curso.id %}" class="btn-comenzar">Comenzar</a>
                 </div>
-            {% else %}
-                <div class="empty-state">
-                    <div class="empty-icon">📖</div>
-                    <h2>No tienes cursos inscritos</h2>
-                    <p>Comienza tu viaje de aprendizaje inscribiéndote en alguno de nuestros cursos de economía. Tenemos contenido para todos los niveles.</p>
-                    <a href="{% url 'cursos:lista_cursos' %}" class="btn-inscribir">Explorar Cursos</a>
-                </div>
-            {% endif %}
+            </div>
+            {% endfor %}
         </div>
-    </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📖</div>
+            <h2>No tienes cursos inscritos</h2>
+            <p>Comienza tu viaje de aprendizaje inscribiéndote en alguno de nuestros cursos de economía. Tenemos contenido para todos los niveles.</p>
+            <a href="{% url 'cursos:lista_cursos' %}" class="btn-inscribir">Explorar Cursos</a>
+        </div>
+    {% endif %}
 
     <script>
         // Función para abrir un curso específico

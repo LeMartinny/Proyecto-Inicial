@@ -13,6 +13,7 @@ from .models import Friend
 from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ValidationError
 from django.urls import reverse
+from .models import Inscripcion
 
 def login_view(request):
     if request.method == 'POST':
@@ -186,3 +187,31 @@ def logout_view(request):
 
 def mi_cursos(request):
     return render(request, 'usuarios/micursos.html')
+
+def acerca_de_ti(request):
+    return render(request, 'usuarios/acercadeti.html')
+
+@login_required
+def mis_cursos(request):
+    """
+    Muestra los cursos en los que el usuario está inscrito.
+    """
+    inscripciones = Inscripcion.objects.filter(usuario=request.user).select_related('curso')
+
+    # Creamos una lista de cursos con info extra para el template
+    cursos_inscritos = []
+    for inscripcion in inscripciones:
+        curso = inscripcion.curso
+        cursos_inscritos.append({
+            'id': curso.id,
+            'titulo': curso.titulo,
+            'descripcion': curso.descripcion,
+            'icono': curso.icono,
+            'progreso': inscripcion.progreso,
+            'completado': inscripcion.completado,
+            'fecha_inscripcion': inscripcion.fecha_inscripcion
+        })
+
+    return render(request, "Programas_Cursos/micursos.html", {
+        'cursos_inscritos': cursos_inscritos
+    })
