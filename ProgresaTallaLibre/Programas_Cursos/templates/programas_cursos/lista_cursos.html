@@ -691,10 +691,13 @@
     // Lógica de inscripción por curso individual
     // ==============================
     document.addEventListener("DOMContentLoaded", () => {
-        const inscribirBtns = document.querySelectorAll(".inscribir-btn");
+        const btn = document.querySelector(".inscribir-btn"); // solo un botón visible a la vez
 
         btn.addEventListener("click", async () => {
-            const cursoId = btn.dataset.cursoId;
+            // Tomamos el ID desde el panel padre
+            const panel = btn.closest(".curso-panel");
+            const cursoId = panel.dataset.cursoId;
+
             if (!cursoId) return alert("Error: curso sin ID.");
 
             btn.disabled = true;
@@ -714,22 +717,13 @@
 
                 if (data.status === "ok") {
                     alert("✅ " + data.message);
-
-                    // Solo este botón cambia
                     btn.textContent = "Curso Inscrito";
                     btn.classList.add("inscrito");
                     btn.disabled = true;
                 } else {
                     alert("⚠️ " + data.message);
-
-                    if (data.message.includes("Ya estás inscrito")) {
-                        btn.textContent = "Curso Inscrito";
-                        btn.classList.add("inscrito");
-                        btn.disabled = true;
-                    } else {
-                        btn.disabled = false;
-                        btn.textContent = "Inscribir Curso";
-                    }
+                    btn.disabled = false;
+                    btn.textContent = "Inscribir Curso";
                 }
             } catch (error) {
                 alert("❌ Error al inscribirse. Inténtalo nuevamente.");
@@ -738,8 +732,7 @@
                 btn.textContent = "Inscribir Curso";
             }
         });
-    });
-    
+});
     // ==============================
     // Listeners generales
     // ==============================

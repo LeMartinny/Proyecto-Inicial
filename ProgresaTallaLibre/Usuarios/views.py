@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .forms import CustomUserCreationForm
 import json
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -14,6 +12,7 @@ from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from .models import Inscripcion
+from Usuarios.models import Curso, Inscripcion
 
 def login_view(request):
     if request.method == 'POST':
@@ -192,20 +191,14 @@ def acerca_de_ti(request):
     return render(request, 'usuarios/acercadeti.html')
 
 @login_required
-def mis_cursos(request):
-    # Obtiene todas las inscripciones del usuario
+def mi_cursos(request):
+    # Todas las inscripciones del usuario actual
     inscripciones = Inscripcion.objects.filter(usuario=request.user)
+    
+    # Obtenemos los IDs de los cursos inscritos
+    cursos_ids = [i.curso.id for i in inscripciones]
 
-    # Extrae los cursos de esas inscripciones
-    cursos_inscritos = [inscripcion.curso for inscripcion in inscripciones]
+    # Filtramos los cursos por los que el usuario ya está inscrito
+    cursos_inscritos = Curso.objects.filter(id__in=cursos_ids)
 
-    # Para cada curso, agregamos datos adicionales de progreso y completado
-    for curso in cursos_inscritos:
-        inscripcion = inscripciones.get(curso=curso)
-        curso.progreso = inscripcion.progreso
-        curso.completado = inscripcion.completado
-        curso.fecha_inscripcion = inscripcion.fecha_inscripcion
-
-    return render(request, "Programas_Cursos/misCursos.html", {
-        "cursos_inscritos": cursos_inscritos
-    })
+    return render(request, "usuarios/micursos.html", {'cursos_inscritos': cursos_inscritos})

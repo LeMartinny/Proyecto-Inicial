@@ -45,4 +45,7 @@ def lista_cursos(request):
     for curso in cursos:
         curso.esta_inscrito = curso.id in cursos_inscritos
 
-    return render(request, "Programas_Cursos/lista_cursos.html", {'curso': curso})
+    context = {
+        'cursos': cursos  # pasamos TODOS los cursos, no solo uno
+    }
+    return render(request, "Programas_Cursos/lista_cursos.html", context)
