@@ -26,7 +26,7 @@
                 <div class="separador">
                     <a href="#quienes-somos">¿QUIENES SOMOS?</a>
                     {% if is_authenticated %}
-                        <a href="{% url 'lista_cursos' %}">PROGRAMAS</a>
+                        <a href="{% url 'cursos:lista_cursos' %}">PROGRAMAS</a>
                         <a  class="tuperfillink" href="{% url 'usuarios:perfil' %}">TU PERFIL</a>
                     {% else %}
                         <!-- Abrir modal de login/registro si no está autenticado.
@@ -60,7 +60,7 @@
                 <!-- Botón de inscripción -->
                 <div class="button-box">
                     {% if is_authenticated %}
-                        <a href="{% url 'lista_cursos' %}" class="cta-button">Ver Cursos</a>
+                        <a href="{% url 'cursos:lista_cursos' %}" class="cta-button">Ver Cursos</a>
                     {% else %}
                         <a href="#" class="cta-button js-open-auth">Inscríbete</a>
                     {% endif %}

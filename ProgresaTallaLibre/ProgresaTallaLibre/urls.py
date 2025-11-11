@@ -14,6 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+"""
+URL configuration for ProgresaTallaLibre project.
+"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -22,10 +25,10 @@ from Core import views as core_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', core_views.home, name='home'),  # Página de inicio
-    path('core/', include('Core.urls')),  # URLs de la app Core
-    path('usuarios/', include('Usuarios.urls')),  # URLs de la app Usuarios
-    path('programas/', include('Programas_Cursos.urls')),  # URLs de la app Programas_Cursos
+    path('', core_views.home, name='home'),
+    path('core/', include('Core.urls')),
+    path('usuarios/', include('Usuarios.urls')),
+    path('cursos/', include('Programas_Cursos.urls', namespace='cursos')),  # ✅ Solo una vez con namespace
 ]
 
 # Configuración para servir archivos estáticos en desarrollo
