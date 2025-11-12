@@ -24,3 +24,14 @@ class Inscripcion(models.Model):
     fecha_inscripcion = models.DateField(auto_now_add=True)
     progreso = models.IntegerField(default=0)
     completado = models.BooleanField(default=False)
+
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('from_user', 'to_user')
+
+    def __str__(self):
+        return f"Solicitud de {self.from_user.username} a {self.to_user.username}"

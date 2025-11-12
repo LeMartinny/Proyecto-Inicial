@@ -1,4 +1,6 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'core/style.css' %}">
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -351,7 +353,23 @@
             flex: 1;
             margin-right: 1rem;
         }
-        
+        /* Layout general: solicitudes a la izquierda, buscador y amigos a la derecha */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* izquierda/derecha */
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Ajuste visual de la sección de solicitudes */
+.requests-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+}
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -369,6 +387,145 @@
                 grid-template-columns: 1fr;
             }
         }
+        /* Distribución general */
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 2.2fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Panel de solicitudes */
+.requests-section {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+}
+
+/* Cada solicitud individual */
+.solicitud {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.solicitud:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Info de usuario dentro de la solicitud */
+.solicitud-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.solicitud-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #667eea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.solicitud-nombre {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+/* Botones */
+.solicitud-botones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-aceptar,
+.btn-rechazar {
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Verde y rojo con efectos */
+.btn-aceptar {
+    background: #16a34a;
+}
+
+.btn-aceptar:hover {
+    background: #15803d;
+    transform: scale(1.05);
+}
+
+.btn-rechazar {
+    background: #dc2626;
+}
+
+.btn-rechazar:hover {
+    background: #b91c1c;
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+/* --- Ajustes de distribución general y expansión lateral --- */
+.content-wrapper {
+    grid-template-columns: 1.2fr 2.3fr; /* más espacio para ambos lados */
+    gap: 2.5rem; /* más separación entre paneles */
+}
+
+/* Que los paneles ocupen todo el ancho disponible */
+.requests-section,
+.search-section,
+.friends-section {
+    width: 100%;
+}
+
+/* --- Mejor uniformidad de los botones (Agregar / Aceptar / Rechazar / Eliminar) --- */
+.add-friend-btn,
+.btn-aceptar,
+.btn-rechazar,
+.remove-friend-btn {
+    border-radius: 12px !important;
+    font-size: 0.95rem !important;
+    padding: 0.6rem 1.2rem !important;
+    font-weight: 600 !important;
+    transition: all 0.25s ease !important;
+}
+
+/* Botones coherentes visualmente */
+.btn-aceptar, .add-friend-btn {
+    background: linear-gradient(90deg, #5a67d8, #764ba2);
+    color: white;
+}
+
+.btn-aceptar:hover, .add-friend-btn:hover {
+    bac
+
+
     </style>
 </head>
 <body>
@@ -381,31 +538,50 @@
             </a>
             <a href="{% url 'usuarios:perfil' %}" class="volver-btn">Volver al Perfil</a>
         </div>
-        
-        <!-- Search Section -->
+<div class="content-wrapper">
+    <!-- Panel izquierdo: Solicitudes -->
+    <div class="requests-section">
+        <h2 class="section-title">Solicitudes</h2>
+        <div id="friendRequests">
+            {% if friend_requests %}
+                {% for request in friend_requests %}
+                    <div class="solicitud">
+                        <div class="solicitud-info">
+                            <div class="solicitud-avatar">{{ request.from_user.username|slice:":1"|upper }}</div>
+                            <div class="solicitud-nombre">{{ request.from_user.username }}</div>
+                        </div>
+                        <div class="solicitud-botones">
+                            <button class="btn-aceptar" onclick="respondRequest({{ request.id }}, true)">Aceptar</button>
+                            <button class="btn-rechazar" onclick="respondRequest({{ request.id }}, false)">Rechazar</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No tienes solicitudes pendientes.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Panel derecho: buscador y amigos -->
+    <div>
         <div class="search-section">
             <div class="search-container">
                 <input type="text" 
-                       class="search-input" 
-                       placeholder="Buscar usuarios por nombre..."
-                       id="searchInput">
+                    class="search-input" 
+                    placeholder="Buscar usuarios por nombre..."
+                    id="searchInput">
                 <button class="search-btn" id="searchBtn">Buscar</button>
             </div>
-            
-            <!-- Search Results -->
-            <div class="search-results" id="searchResults">
-                <!-- Results will be inserted here by JavaScript -->
-            </div>
+            <div class="search-results" id="searchResults"></div>
         </div>
-        
-        <!-- Friends List -->
+
         <div class="friends-section">
             <h2 class="section-title">Tus Amigos</h2>
-            <div class="friends-list" id="friendsList">
-                <!-- Example friend cards - Will be populated by JavaScript -->
-            </div>
+            <div class="friends-list" id="friendsList"></div>
         </div>
     </div>
+</div>
+
     
 <!-- ...existing header code... -->
 
@@ -490,10 +666,12 @@
             });
             const data = await response.json();
             
-            if (data.success) {
-                alert('Amigo agregado exitosamente');
-                location.reload(); // Refresh to show new friend
-            } else {
+           if (data.success) {
+    // Actualiza los resultados o el estado sin mostrar alertas
+    const searchResults = document.getElementById('searchResults');
+    searchResults.classList.remove('show');
+}
+ else {
                 alert(data.error || 'Error al agregar amigo');
             }
         } catch (err) {
@@ -642,6 +820,31 @@
         const overlay = document.getElementById('friend-modal-overlay');
         if(overlay){ overlay.style.display = 'none'; document.body.style.overflow = ''; }
     }
+    // Aceptar o rechazar solicitud
+async function respondRequest(requestId, accept) {
+    try {
+        const response = await fetch(`/usuarios/respond_friend_request/${requestId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ accept }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.error || 'Error al procesar la solicitud');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al procesar la solicitud');
+    }
+}
+
 </script>
 </body>
 </html>

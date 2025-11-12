@@ -8,6 +8,7 @@ import json
 from django.contrib.auth.models import User
 from django.db.models import Q
 from .models import Friend
+from .models import FriendRequest
 from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ValidationError
 from django.urls import reverse
@@ -98,9 +99,9 @@ def perfil_view(request):
 
 @login_required
 def amigos_view(request):
-    # Get current user's friends
     friends = Friend.objects.filter(user=request.user).select_related('friend')
-    return render(request, 'usuarios/amigos.html', {'friends': friends})
+    friend_requests = FriendRequest.objects.filter(to_user=request.user).select_related('from_user')
+    return render(request, 'usuarios/amigos.html', {'friends': friends, 'friend_requests': friend_requests})
 
 @login_required
 def search_users(request):
@@ -144,19 +145,54 @@ def search_users(request):
 def add_friend(request, user_id):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Method not allowed'})
-        
     try:
-        friend = User.objects.get(id=user_id)
-        if friend == request.user:
+        target = User.objects.get(id=user_id)
+        if target == request.user:
             return JsonResponse({'success': False, 'error': 'Cannot add yourself'})
-            
-        # Crear la relación bidireccional de amistad
-        Friend.objects.get_or_create(user=request.user, friend=friend)
-        Friend.objects.get_or_create(user=friend, friend=request.user)  # Crear la relación inversa
-        
-        return JsonResponse({'success': True})
+
+        # If already friends
+        if Friend.objects.filter(user=request.user, friend=target).exists():
+            return JsonResponse({'success': False, 'error': 'Already friends'})
+
+        # If a request already exists (either direction)
+        if FriendRequest.objects.filter(from_user=request.user, to_user=target).exists():
+            return JsonResponse({'success': False, 'error': 'Request already sent'})
+
+        if FriendRequest.objects.filter(from_user=target, to_user=request.user).exists():
+            # The other user already sent a request — accept it instead
+            fr = FriendRequest.objects.get(from_user=target, to_user=request.user)
+            # create friendship both ways
+            Friend.objects.get_or_create(user=request.user, friend=target)
+            Friend.objects.get_or_create(user=target, friend=request.user)
+            fr.delete()
+            return JsonResponse({'success': True, 'message': 'Request accepted'})
+
+        # Create a friend request
+        FriendRequest.objects.create(from_user=request.user, to_user=target)
+        return JsonResponse({'success': True, 'message': 'Request sent'})
     except User.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'User not found'})
+
+
+@login_required
+def respond_request(request, request_id, action):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'})
+    try:
+        fr = FriendRequest.objects.get(id=request_id, to_user=request.user)
+        if action == 'accept':
+            # create friendship both ways
+            Friend.objects.get_or_create(user=request.user, friend=fr.from_user)
+            Friend.objects.get_or_create(user=fr.from_user, friend=request.user)
+            fr.delete()
+            return JsonResponse({'success': True})
+        elif action == 'decline':
+            fr.delete()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid action'})
+    except FriendRequest.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Request not found'})
 
 @login_required
 def remove_friend(request, user_id):
@@ -202,3 +238,30 @@ def mi_cursos(request):
     cursos_inscritos = Curso.objects.filter(id__in=cursos_ids)
 
     return render(request, "usuarios/micursos.html", {'cursos_inscritos': cursos_inscritos})
+@csrf_exempt
+@login_required
+def respond_friend_request(request, request_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'})
+
+    try:
+        data = json.loads(request.body)
+        accept = data.get('accept')
+
+        fr = FriendRequest.objects.get(id=request_id, to_user=request.user)
+
+        if accept:
+            # Aceptar solicitud
+            Friend.objects.get_or_create(user=request.user, friend=fr.from_user)
+            Friend.objects.get_or_create(user=fr.from_user, friend=request.user)
+            fr.delete()
+            return JsonResponse({'success': True, 'message': 'Solicitud aceptada'})
+        else:
+            # Rechazar solicitud
+            fr.delete()
+            return JsonResponse({'success': True, 'message': 'Solicitud rechazada'})
+
+    except FriendRequest.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Request not found'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
