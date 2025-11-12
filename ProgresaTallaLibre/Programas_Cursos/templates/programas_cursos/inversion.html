@@ -19,7 +19,7 @@
     <div class="card">
       <h1>{% if curso %}{{ curso.titulo }}{% else %}Tipos de Inversión{% endif %}</h1>
       <p>{% if curso and curso.descripcion %}{{ curso.descripcion }}{% else %}Contenido del curso Tipos de Inversión.{% endif %}</p>
-      <a class="btn" href="{% url 'cursos:lista_cursos' %}">Volver a Cursos</a>
+      <a class="btn" href="{% url 'usuarios:micursos' %}">Volver a Cursos</a>
     </div>
   </div>
 </body>
