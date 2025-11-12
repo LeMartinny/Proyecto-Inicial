@@ -2,271 +2,191 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Cursos</title>
-    
-    <!-- Fuente Alice -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" size="32x32" href="{% static 'img/logo.png' %}"/>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Cursos</title>
 
-        body {
-            font-family: 'Alice', serif;
-            background: #1a1a1a;
-            min-height: 100vh;
-            padding: 20px;
-        }
+<!-- Fuente Alice -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" size="32x32" href="{% static 'img/logo.png' %}"/>
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+<style>
+/* ==========================
+   CSS Extendido del HTML de Cursos
+========================== */
+* { margin:0; padding:0; box-sizing:border-box; }
 
-        .header {
-            background: #2a2a2a;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-bottom: 30px;
-            position: relative;
-        }
+body {
+    font-family: 'Alice', serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+    padding: 20px;
+}
 
-        .btn-volver {
-            background: rgba(66, 133, 244, 0.1);
-            color: #4285F4;
-            border: 2px solid #4285F4;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-            text-decoration: none;
-        }
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
 
-        .btn-volver:hover {
-            background: #4285F4;
-            color: white;
-            transform: translateX(-3px);
-        }
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
 
-        .header h1 {
-            color: white;
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
+.header h1 {
+    font-size: 2.5rem;
+    text-decoration: underline;
+    text-decoration-color: #60a5fa;
+    text-underline-offset: 10px;
+    text-decoration-thickness: 4px;
+}
 
-        .header p {
-            color: #b0b0b0;
-            font-size: 1.1em;
-        }
+.header p {
+    color: #b0b0b0;
+    font-size: 1.1rem;
+}
 
-        .cursos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
+.cursos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
 
-        .curso-card {
-            background: #2a2a2a;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            border: 1px solid #3a3a3a;
-        }
+/* Tarjetas de curso */
+.curso-card {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    border: 2px solid transparent;
+}
 
-        .curso-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(100, 181, 246, 0.3);
-            border-color: #64B5F6;
-        }
+.curso-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(96,165,250,0.3);
+    border-color: #60a5fa;
+}
 
-        .curso-imagen {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64B5F6;
-            font-size: 3em;
-            border-bottom: 2px solid #3a3a3a;
-        }
+.curso-imagen {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64B5F6;
+    font-size: 3em;
+}
 
-        .curso-contenido {
-            padding: 20px;
-        }
+.curso-contenido {
+    padding: 1.5rem;
+    text-align: center;
+}
 
-        .curso-titulo {
-            font-size: 1.4em;
-            color: white;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
+.curso-titulo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
 
-        .curso-descripcion {
-            color: #b0b0b0;
-            font-size: 0.95em;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
+.curso-descripcion {
+    color: #b0b0b0;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
 
-        .curso-progreso {
-            margin-top: 15px;
-        }
+.btn-inscribir, .btn-comenzar, .desinscribir {
+    display: inline-block;
+    margin: 0.3rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
 
-        .progreso-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9em;
-            color: #b0b0b0;
-            margin-bottom: 8px;
-        }
+.btn-comenzar, .btn-inscribir {
+    background: #64B5F6;
+    color: white;
+}
 
-        .progreso-bar {
-            width: 100%;
-            height: 8px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+.btn-comenzar:hover, .btn-inscribir:hover {
+    background: #90CAF9;
+    transform: translateY(-2px);
+}
 
-        .progreso-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #64B5F6 0%, #90CAF9 100%);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
+.desinscribir {
+    background: #d9534f;
+    color: white;
+}
 
-        .curso-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #3a3a3a;
-        }
+.desinscribir:hover {
+    background: #c9302c;
+}
 
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9em;
-            color: #b0b0b0;
-        }
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
-        .empty-state {
-            background: #2a2a2a;
-            padding: 60px 40px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #3a3a3a;
-        }
+.badge-activo {
+    background: rgba(100,181,246,0.2);
+    color: #64B5F6;
+    border: 1px solid #64B5F6;
+}
 
-        .empty-icon {
-            font-size: 5em;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
+.badge-completado {
+    background: rgba(33,150,243,0.2);
+    color: #2196F3;
+    border: 1px solid #2196F3;
+}
 
-        .empty-state h2 {
-            color: white;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
+.empty-state {
+    background: #2a2a2a;
+    padding: 60px 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid #3a3a3a;
+}
 
-        .empty-state p {
-            color: #b0b0b0;
-            font-size: 1.1em;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
+.empty-icon { font-size: 5em; margin-bottom: 20px; opacity:0.5; }
 
-        .btn-inscribir {
-            background: #64B5F6;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-inscribir:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.5);
-            background: #90CAF9;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        .badge-activo {
-            background: rgba(100, 181, 246, 0.2);
-            color: #64B5F6;
-            border: 1px solid #64B5F6;
-        }
-
-        .badge-completado {
-            background: rgba(33, 150, 243, 0.2);
-            color: #2196F3;
-            border: 1px solid #2196F3;
-        }
-
-        @media (max-width: 768px) {
-            .cursos-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header h1 {
-                font-size: 1.5em;
-            }
-        }
-    </style>
+@media (max-width:768px) {
+    .cursos-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.8rem; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <a href="{% url 'usuarios:perfil' %}" class="btn-volver">
-                <span>←</span>
-                <span>Volver al Perfil</span>
-            </a>
-            <h1>📚 Mis Cursos</h1>
-            <p>Gestiona y continúa tu aprendizaje en economía</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <a href="{% url 'usuarios:perfil' %}" class="btn-inscribir">← Volver al Perfil</a>
+        <h1>📚 Mis Cursos</h1>
+        <p>Gestiona y continúa tu aprendizaje en economía</p>
+    </div>
 
-        <div id="cursosContainer">
-            {% if cursos_inscritos %}
-    <div class="cursos-grid">
-        {% for curso in cursos_inscritos %}
-            <div class="curso-card" onclick="abrirCurso('{{ curso.id }}')">
+    <div id="cursosContainer">
+        {% if cursos_inscritos %}
+        <div class="cursos-grid">
+            {% for curso in cursos_inscritos %}
+            <div class="curso-card">
                 <div class="curso-imagen">{{ curso.icono }}</div>
                 <div class="curso-contenido">
                     <h3 class="curso-titulo">{{ curso.titulo }}</h3>
@@ -286,39 +206,97 @@
                         </div>
                     </div>
 
-                    <div class="curso-info">
-                        <div class="info-item">
-                            <span>📅</span>
-                            <span>{{ curso.fecha_inscripcion }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span>📝</span>
-                            <span>En progreso</span>
-                        </div>
-                    </div>
-
-                    <!-- Botón "Comenzar" -->
                     <a href="{% url 'cursos:detalle_curso' curso.id %}" class="btn-comenzar">Comenzar</a>
+                    <button class="desinscribir" onclick="desinscribir({{ curso.id }})">Desinscribirme</button>
                 </div>
             </div>
             {% endfor %}
         </div>
-    {% else %}
+        {% else %}
         <div class="empty-state">
             <div class="empty-icon">📖</div>
             <h2>No tienes cursos inscritos</h2>
-            <p>Comienza tu viaje de aprendizaje inscribiéndote en alguno de nuestros cursos de economía. Tenemos contenido para todos los niveles.</p>
+            <p>Comienza tu viaje de aprendizaje inscribiéndote en alguno de nuestros cursos de economía.</p>
             <a href="{% url 'cursos:lista_cursos' %}" class="btn-inscribir">Explorar Cursos</a>
         </div>
-    {% endif %}
-    </body>
+        {% endif %}
+    </div>
+</div>
 
-    <script>
-        // Función para abrir un curso específico
-        function abrirCurso(id) {
-            alert(`Abriendo curso: ${id}\n(Aquí se conectará con la página del curso)`);
-            // En el futuro: window.location.href = `/cursos/${id}/`;
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const cursosDisponibles = [
+        { id: 1, titulo: "Ahorro y Gastos", icono: "🏦", descripcion: "Controla tus gastos y ahorra más", link: "ahorrogasto.html" },
+        { id: 2, titulo: "Inflación", icono: "📊", descripcion: "Comprende el impacto de la inflación", link: "inflacion.html" },
+        { id: 3, titulo: "Inversión", icono: "📈", descripcion: "Aprende dónde y cómo invertir tu dinero", link: "inversion.html" },
+        { id: 4, titulo: "Presupuesto", icono: "💰", descripcion: "Aprende a gestionar tu presupuesto personal", link: "presupuesto.html" }
+    ];
+
+    let inscritos = JSON.parse(localStorage.getItem("cursos_inscritos")) || [];
+
+    const contenedor = document.getElementById("cursosContainer");
+
+    function render() {
+        contenedor.innerHTML = "";
+
+        if (inscritos.length === 0) {
+            contenedor.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📖</div>
+                    <h2>No tienes cursos inscritos</h2>
+                    <p>Comienza tu viaje de aprendizaje inscribiéndote en alguno de nuestros cursos.</p>
+                    <a href="{% url 'cursos:lista_cursos' %}" class="btn-inscribir">Explorar Cursos</a>
+                </div>
+            `;
+            return;
         }
-    </script>
+
+        const grid = document.createElement("div");
+        grid.className = "cursos-grid";
+
+        inscritos.forEach(id => {
+            const curso = cursosDisponibles.find(c => c.id === id);
+            if (!curso) return;
+
+            const card = document.createElement("div");
+            card.className = "curso-card";
+
+            card.innerHTML = `
+                <div class="curso-imagen">${curso.icono}</div>
+                <div class="curso-contenido">
+                    <h3 class="curso-titulo">${curso.titulo}</h3>
+                    <p class="curso-descripcion">${curso.descripcion}</p>
+
+                    <span class="badge badge-activo">En progreso</span>
+
+                    <div class="curso-progreso">
+                        <div class="progreso-label">
+                            <span>Progreso</span>
+                            <span><strong>0%</strong></span>
+                        </div>
+                        <div class="progreso-bar">
+                            <div class="progreso-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <a href="${curso.link}" class="btn-comenzar">Ir</a>
+                    <button class="desinscribir" onclick="desinscribir(${curso.id})">Desinscribirme</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        contenedor.appendChild(grid);
+    }
+
+    window.desinscribir = function(id) {
+        inscritos = inscritos.filter(x => x !== id);
+        localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+        render();
+    }
+
+    render();
+});
+</script>
 </body>
 </html>
