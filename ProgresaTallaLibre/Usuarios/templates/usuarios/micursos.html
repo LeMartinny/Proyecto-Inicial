@@ -316,10 +316,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (typeof arg === 'number') {
             inscritos = inscritos.filter(x => x !== arg);
             localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
-            if (!HAS_SERVER_COURSES) {
-                render();
-            }
-            return;
+            // Refresca siempre para evitar inconsistencias visuales
+            return window.location.reload();
         }
 
         // Backend + limpieza de localStorage para evitar re-sync
@@ -338,12 +336,8 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("cursos_inscritos", JSON.stringify(arr));
         } catch (_) {}
 
-        if (btn && btn.closest) {
-            const card = btn.closest('.curso-card');
-            if (card) card.remove();
-        } else {
-            window.location.reload();
-        }
+        // Refresca siempre tras desinscribir en backend
+        window.location.reload();
     }
 
     if (!HAS_SERVER_COURSES) {
