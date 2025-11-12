@@ -473,7 +473,7 @@
         }
     </style>
 </head>
-<body>
+<h>
     <!-- Overlay de fondo -->
     <div class="overlay" id="overlay"></div>
     
@@ -498,6 +498,7 @@
                 </ul>
             </div>
             <div class="curso-card" data-curso-codigo="{{ curso.codigo }}">
+
                 <button class="inscribir-btn" data-curso-codigo="{{ curso.codigo }}">
                     {% if curso.esta_inscrito %}Curso Inscrito{% else %}Inscribir Curso{% endif %}
                 </button>
@@ -583,172 +584,146 @@
             </div>
         </div>
     </div>
-    
-    <script>
-    // ==============================
-    // Data de los cursos (sin cambios)
-    // ==============================
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Datos de cursos
     const cursosData = {
         'presupuesto-personal': {
             icon: '💰',
             title: 'Presupuesto Personal',
-            description: 'Domina el arte de gestionar tus finanzas personales con este curso completo...',
+            description: 'Aprende a gestionar tus finanzas.',
             features: [
                 'Crea presupuestos mensuales efectivos',
-                'Controla ingresos y gastos detalladamente',
-                'Establece metas financieras alcanzables',
-                'Desarrolla hábitos de ahorro sostenibles'
+                'Controla ingresos y gastos',
+                'Establece metas financieras alcanzables'
             ]
         },
         'tipos-inversion': {
             icon: '📈',
             title: 'Tipos de Inversión',
-            description: 'Explora el mundo de las inversiones...',
+            description: 'Conoce distintas estrategias de inversión.',
             features: [
-                'Conoce acciones, bonos y fondos mutuos',
-                'Aprende a evaluar riesgos de inversión',
-                'Diversifica tu portafolio efectivamente',
-                'Toma decisiones financieras informadas'
+                'Aprende sobre acciones y bonos',
+                'Evalúa riesgos de inversión',
+                'Diversifica tu portafolio'
             ]
         },
         'ahorro-gasto': {
             icon: '🏦',
             title: 'Ahorro y Gasto',
-            description: 'Desarrolla una relación saludable con el dinero...',
+            description: 'Controla tus gastos y ahorra más.',
             features: [
-                'Reduce gastos innecesarios efectivamente',
-                'Identifica y elimina fugas de dinero',
-                'Construye un fondo de ahorro sólido',
-                'Alcanza tus metas financieras rápido'
+                'Reduce gastos innecesarios',
+                'Construye un fondo de ahorro',
+                'Alcanza tus metas financieras'
             ]
         },
         'inflacion': {
             icon: '📊',
             title: 'Inflación',
-            description: 'Comprende uno de los conceptos económicos más importantes...',
+            description: 'Comprende el impacto de la inflación.',
             features: [
                 'Entiende cómo funciona la inflación',
-                'Protege tus ahorros del impacto inflacionario',
-                'Comprende indicadores económicos clave',
-                'Toma decisiones en contextos económicos variables'
+                'Protege tus ahorros',
+                'Toma decisiones financieras informadas'
             ]
         }
     };
 
-    const sidePanel = document.getElementById('sidePanel');
-    const overlay = document.getElementById('overlay');
-    const closePanelBtn = document.getElementById('closePanelBtn');
-    const inscribirBtn = document.getElementById('inscribirBtn');
-    let currentCursoId = null;
+    // Cargar inscritos desde localStorage
+    let inscritos = JSON.parse(localStorage.getItem("cursos_inscritos")) || [];
 
-    // ==============================
-    // Función para abrir el panel
-    // ==============================
-    function openPanel(cursoId) {
-        const curso = cursosData[cursoId];
-        currentCursoId = cursoId;
+    const cursoCards = document.querySelectorAll(".curso-card");
+    const sidePanel = document.getElementById("sidePanel");
+    const overlay = document.getElementById("overlay");
+    const closePanelBtn = document.getElementById("closePanelBtn");
 
-        document.getElementById('panelIcon').textContent = curso.icon;
-        document.getElementById('panelTitle').textContent = curso.title;
-        document.getElementById('panelDescription').textContent = curso.description;
+    const panelIcon = document.getElementById("panelIcon");
+    const panelTitle = document.getElementById("panelTitle");
+    const panelDescription = document.getElementById("panelDescription");
+    const featuresList = document.getElementById("featuresList");
+    const panelBtn = sidePanel.querySelector(".inscribir-btn");
 
-        const featuresList = document.getElementById('featuresList');
-        featuresList.innerHTML = '';
-        curso.features.forEach(feature => {
-            const li = document.createElement('li');
-            li.textContent = feature;
-            featuresList.appendChild(li);
-        });
+    // Función para actualizar botones según inscripción
+    function actualizarBotones() {
+        cursoCards.forEach(card => {
+            const key = card.dataset.curso;
+            const btn = card.querySelector(".action-button");
+            if (!btn) return;
 
-        sidePanel.classList.add('open');
-        overlay.classList.add('show');
-
-        document.querySelectorAll('.curso-card').forEach(card => card.classList.remove('active'));
-        document.querySelector(`[data-curso="${cursoId}"]`).classList.add('active');
-    }
-
-    // ==============================
-    // Función para cerrar el panel
-    // ==============================
-    function closePanel() {
-        sidePanel.classList.remove('open');
-        overlay.classList.remove('show');
-        document.querySelectorAll('.curso-card').forEach(card => card.classList.remove('active'));
-    }
-
-    // ==============================
-    // Obtener token CSRF correctamente
-    // ==============================
-    function getCSRFToken() {
-        const cookieValue = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('csrftoken='))
-            ?.split('=')[1];
-        return cookieValue;
-    }
-
-    // ==============================
-    // Lógica de inscripción por curso individual
-    // ==============================
-    document.addEventListener("DOMContentLoaded", () => {
-        const btn = document.querySelector(".inscribir-btn"); // solo un botón visible a la vez
-
-        btn.addEventListener("click", async () => {
-            // Tomamos el ID desde el panel padre
-            const panel = btn.closest(".curso-panel");
-            const cursoId = panel.dataset.cursoId;
-
-            if (!cursoId) return alert("Error: curso sin ID.");
-
-            btn.disabled = true;
-            btn.textContent = "Inscribiendo...";
-
-            try {
-                const response = await fetch(`/cursos/inscribir/${cursoId}/`, {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": getCSRFToken(),
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({})
-                });
-
-                const data = await response.json();
-
-                if (data.status === "ok") {
-                    alert("✅ " + data.message);
-                    btn.textContent = "Curso Inscrito";
-                    btn.classList.add("inscrito");
-                    btn.disabled = true;
-                } else {
-                    alert("⚠️ " + data.message);
-                    btn.disabled = false;
-                    btn.textContent = "Inscribir Curso";
-                }
-            } catch (error) {
-                alert("❌ Error al inscribirse. Inténtalo nuevamente.");
-                console.error(error);
-                btn.disabled = false;
-                btn.textContent = "Inscribir Curso";
+            if (inscritos.includes(key)) {
+                btn.textContent = "✓";
+                btn.classList.add("inscrito");
+            } else {
+                btn.textContent = "→";
+                btn.classList.remove("inscrito");
             }
         });
-});
-    // ==============================
-    // Listeners generales
-    // ==============================
-    document.querySelectorAll('.curso-card').forEach(card => {
-        card.addEventListener('click', function() {
-            openPanel(this.getAttribute('data-curso'));
+
+        // Panel lateral
+        if (panelBtn && inscritos.includes(panelBtn.dataset.cursoCodigo)) {
+            panelBtn.textContent = "Curso Inscrito";
+            panelBtn.disabled = true;
+            panelBtn.classList.add("inscrito");
+        } else if (panelBtn) {
+            panelBtn.textContent = "Inscribirme";
+            panelBtn.disabled = false;
+            panelBtn.classList.remove("inscrito");
+        }
+    }
+
+    actualizarBotones();
+
+    // Abrir panel al click en tarjeta
+    cursoCards.forEach(card => {
+        card.addEventListener("click", (e) => {
+            // Evitar conflicto si clic en el botón de acción
+            if (e.target.classList.contains("action-button")) {
+                const key = card.dataset.curso;
+                if (!inscritos.includes(key)) {
+                    inscritos.push(key);
+                    localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+                    actualizarBotones();
+                }
+                return;
+            }
+
+            const key = card.dataset.curso;
+            const curso = cursosData[key];
+            if (!curso) return;
+
+            panelIcon.textContent = curso.icon;
+            panelTitle.textContent = curso.title;
+            panelDescription.textContent = curso.description;
+            featuresList.innerHTML = curso.features.map(f => `<li>${f}</li>`).join("");
+            panelBtn.dataset.cursoCodigo = key;
+
+            sidePanel.classList.add("open");
+            overlay.classList.add("show");
+
+            actualizarBotones();
         });
     });
 
-    closePanelBtn.addEventListener('click', closePanel);
-    overlay.addEventListener('click', closePanel);
+    // Cerrar panel
+    function cerrarPanel() {
+        sidePanel.classList.remove("open");
+        overlay.classList.remove("show");
+    }
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidePanel.classList.contains('open')) {
-            closePanel();
+    closePanelBtn.addEventListener("click", cerrarPanel);
+    overlay.addEventListener("click", cerrarPanel);
+
+    // Inscripción desde panel lateral
+    panelBtn.addEventListener("click", () => {
+        const key = panelBtn.dataset.cursoCodigo;
+        if (!inscritos.includes(key)) {
+            inscritos.push(key);
+            localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+            actualizarBotones();
         }
     });
-</script>
+});
+</script>   
 </html>
