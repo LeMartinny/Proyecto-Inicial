@@ -5,10 +5,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# SQLite DB (evita que el archivo de la BD local aparezca como cambio)
-ProgresaTallaLibre/db.sqlite3
-db.sqlite3
-
 # Entornos virtuales
 .env
 .venv/
