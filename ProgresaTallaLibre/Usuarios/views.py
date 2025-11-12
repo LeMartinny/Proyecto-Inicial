@@ -14,6 +14,7 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from .models import Inscripcion
 from Usuarios.models import Curso, Inscripcion
+from Programas_Cursos.models import Curso as PCurso, Inscripcion as PInscripcion
 
 def login_view(request):
     if request.method == 'POST':
@@ -265,3 +266,21 @@ def respond_friend_request(request, request_id):
         return JsonResponse({'success': False, 'error': 'Request not found'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+# Redefinimos mi_cursos al final para usar Programas_Cursos como fuente de verdad
+@login_required
+def mi_cursos(request):
+    inscripciones = PInscripcion.objects.filter(usuario=request.user).select_related('curso')
+    cursos_inscritos = [
+        {
+            'id': ins.curso.id,
+            'codigo': ins.curso.codigo,
+            'titulo': ins.curso.titulo,
+            'descripcion': ins.curso.descripcion,
+            'icono': ins.curso.icono,
+            'progreso': ins.progreso,
+            'completado': ins.completado,
+        }
+        for ins in inscripciones
+    ]
+    return render(request, "usuarios/micursos.html", {'cursos_inscritos': cursos_inscritos})

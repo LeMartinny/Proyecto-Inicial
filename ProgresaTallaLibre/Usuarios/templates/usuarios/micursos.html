@@ -206,8 +206,12 @@ body {
                         </div>
                     </div>
 
+                    <a href="{% url 'cursos:ver_curso' curso.codigo %}" class="btn-comenzar">Comenzar</a>
+                    {% comment %}
+                    Enlace antiguo (lo usaremos más adelante):
                     <a href="{% url 'cursos:detalle_curso' curso.id %}" class="btn-comenzar">Comenzar</a>
-                    <button class="desinscribir" onclick="desinscribir({{ curso.id }})">Desinscribirme</button>
+                    {% endcomment %}
+                    <button class="desinscribir" onclick="desinscribir('{{ curso.codigo }}', this)">Desinscribirme</button>
                 </div>
             </div>
             {% endfor %}
@@ -225,6 +229,7 @@ body {
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    var HAS_SERVER_COURSES = {% if cursos_inscritos %}true{% else %}false{% endif %};
     const cursosDisponibles = [
         { id: 1, titulo: "Ahorro y Gastos", icono: "🏦", descripcion: "Controla tus gastos y ahorra más", link: "ahorrogasto.html" },
         { id: 2, titulo: "Inflación", icono: "📊", descripcion: "Comprende el impacto de la inflación", link: "inflacion.html" },
@@ -289,13 +294,61 @@ document.addEventListener("DOMContentLoaded", () => {
         contenedor.appendChild(grid);
     }
 
-    window.desinscribir = function(id) {
-        inscritos = inscritos.filter(x => x !== id);
-        localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
-        render();
+    // Helper CSRF para POST y endpoint de backend
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const desinscribirUrlTpl = "{% url 'cursos:desinscribir_curso' 'REPLACE_CODE' %}";
+
+    window.desinscribir = async function(arg, btn) {
+        // Fallback local (cuando no hay cursos del servidor)
+        if (typeof arg === 'number') {
+            inscritos = inscritos.filter(x => x !== arg);
+            localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+            if (!HAS_SERVER_COURSES) {
+                render();
+            }
+            return;
+        }
+
+        // Backend + limpieza de localStorage para evitar re-sync
+        const codigo = String(arg);
+        const url = desinscribirUrlTpl.replace('REPLACE_CODE', codigo);
+        try {
+            const resp = await fetch(url, { method: 'POST', headers: { 'X-CSRFToken': getCookie('csrftoken') } });
+            if (!resp.ok) throw new Error('fail');
+        } catch (_) {
+            return; 
+        }
+
+        try {
+            let arr = JSON.parse(localStorage.getItem("cursos_inscritos")) || [];
+            arr = arr.filter(k => k !== codigo);
+            localStorage.setItem("cursos_inscritos", JSON.stringify(arr));
+        } catch (_) {}
+
+        if (btn && btn.closest) {
+            const card = btn.closest('.curso-card');
+            if (card) card.remove();
+        } else {
+            window.location.reload();
+        }
     }
 
-    render();
+    if (!HAS_SERVER_COURSES) {
+        render();
+    }
 });
 </script>
 </body>

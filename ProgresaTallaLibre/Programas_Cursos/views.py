@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Curso, Inscripcion
 from django.shortcuts import render
+from django.shortcuts import redirect
 
 @login_required
 def lista_cursos(request):
@@ -49,3 +50,41 @@ def lista_cursos(request):
         'cursos': cursos  # pasamos TODOS los cursos, no solo uno
     }
     return render(request, "Programas_Cursos/lista_cursos.html", context)
+
+@login_required
+def desinscribir_curso(request, codigo):
+    if request.method == 'POST':
+        try:
+            curso = Curso.objects.get(codigo=codigo)
+        except Curso.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Curso no encontrado.'}, status=404)
+
+        deleted, _ = Inscripcion.objects.filter(usuario=request.user, curso=curso).delete()
+        if deleted:
+            return JsonResponse({'status': 'ok', 'message': 'Desinscripción completada.'})
+        else:
+            return JsonResponse({'status': 'ok', 'message': 'No estabas inscrito.'})
+
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)
+
+@login_required
+def ver_curso(request, codigo):
+    """Redirige a la plantilla del curso según su código."""
+    template_map = {
+        'presupuesto-personal': 'programas_cursos/presupuesto.html',
+        'ahorro-gasto': 'programas_cursos/ahorrogasto.html',
+        'tipos-inversion': 'programas_cursos/inversion.html',
+        'inflacion': 'programas_cursos/inflacion.html',
+    }
+
+    template = template_map.get(codigo)
+    if not template:
+        return redirect('cursos:lista_cursos')
+
+    try:
+        curso = Curso.objects.get(codigo=codigo)
+    except Curso.DoesNotExist:
+        curso = None
+
+    context = {'curso': curso, 'codigo': codigo}
+    return render(request, template, context)

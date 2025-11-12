@@ -587,6 +587,39 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
+    // CSRF helper (Django)
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const enrollUrlTemplate = "{% url 'cursos:inscribir_curso' 'REPLACE_ME' %}";
+
+    async function inscribirCursoBackend(key) {
+        const url = enrollUrlTemplate.replace('REPLACE_ME', key);
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        });
+        if (!resp.ok) throw new Error('Fallo al inscribir en el servidor');
+        const data = await resp.json().catch(() => ({}));
+        if (data.status && data.status !== 'ok' && !(data.message || '').includes('inscrito')) {
+            throw new Error(data.message || 'Inscripción rechazada');
+        }
+        return true;
+    }
+
     // Datos de cursos
     const cursosData = {
         'presupuesto-personal': {
@@ -633,6 +666,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Cargar inscritos desde localStorage
     let inscritos = JSON.parse(localStorage.getItem("cursos_inscritos")) || [];
+
+    // Sincronizar localStorage -> backend para mantener coherencia
+    (async function syncLocalToServer() {
+        try {
+            for (const key of inscritos) {
+                try { await inscribirCursoBackend(key); } catch (e) { /* silencioso */ }
+            }
+        } catch (_) {}
+    })();
 
     const cursoCards = document.querySelectorAll(".curso-card");
     const sidePanel = document.getElementById("sidePanel");
@@ -682,9 +724,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (e.target.classList.contains("action-button")) {
                 const key = card.dataset.curso;
                 if (!inscritos.includes(key)) {
-                    inscritos.push(key);
-                    localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
-                    actualizarBotones();
+                    inscribirCursoBackend(key)
+                        .then(() => {
+                            inscritos.push(key);
+                            localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+                            actualizarBotones();
+                        })
+                        .catch(() => {
+                            // No actualizamos UI si falla backend
+                        });
                 }
                 return;
             }
@@ -719,9 +767,15 @@ document.addEventListener("DOMContentLoaded", () => {
     panelBtn.addEventListener("click", () => {
         const key = panelBtn.dataset.cursoCodigo;
         if (!inscritos.includes(key)) {
-            inscritos.push(key);
-            localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
-            actualizarBotones();
+            inscribirCursoBackend(key)
+                .then(() => {
+                    inscritos.push(key);
+                    localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+                    actualizarBotones();
+                })
+                .catch(() => {
+                    // No actualizamos UI si falla backend
+                });
         }
     });
 });
