@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (typeof arg === 'number') {
             inscritos = inscritos.filter(x => x !== arg);
             localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
-            // Refresca siempre para evitar inconsistencias visuales
+    
             return window.location.reload();
         }
 
@@ -335,8 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
             arr = arr.filter(k => k !== codigo);
             localStorage.setItem("cursos_inscritos", JSON.stringify(arr));
         } catch (_) {}
-
-        // Refresca siempre tras desinscribir en backend
+        
         window.location.reload();
     }
 
