@@ -229,6 +229,32 @@ body {
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    const STORAGE_KEY = "{{ storage_key|default:'cursos_inscritos'|escapejs }}";
+    const LEGACY_KEY = "cursos_inscritos";
+
+    function readStoredCourses(key) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (_) {
+            return [];
+        }
+    }
+
+    function writeStoredCourses(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    if (STORAGE_KEY !== LEGACY_KEY) {
+        const legacyCourses = readStoredCourses(LEGACY_KEY);
+        if (!localStorage.getItem(STORAGE_KEY) && legacyCourses.length) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(legacyCourses));
+        }
+        localStorage.removeItem(LEGACY_KEY);
+    }
+
     var HAS_SERVER_COURSES = {% if cursos_inscritos %}true{% else %}false{% endif %};
     const cursosDisponibles = [
         { id: 1, titulo: "Ahorro y Gastos", icono: "🏦", descripcion: "Controla tus gastos y ahorra más", link: "ahorrogasto.html" },
@@ -237,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { id: 4, titulo: "Presupuesto", icono: "💰", descripcion: "Aprende a gestionar tu presupuesto personal", link: "presupuesto.html" }
     ];
 
-    let inscritos = JSON.parse(localStorage.getItem("cursos_inscritos")) || [];
+    let inscritos = readStoredCourses(STORAGE_KEY);
 
     const contenedor = document.getElementById("cursosContainer");
 
@@ -315,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fallback local (cuando no hay cursos del servidor)
         if (typeof arg === 'number') {
             inscritos = inscritos.filter(x => x !== arg);
-            localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+            writeStoredCourses(inscritos);
     
             return window.location.reload();
         }
@@ -331,9 +357,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            let arr = JSON.parse(localStorage.getItem("cursos_inscritos")) || [];
+            let arr = readStoredCourses(STORAGE_KEY);
             arr = arr.filter(k => k !== codigo);
-            localStorage.setItem("cursos_inscritos", JSON.stringify(arr));
+            writeStoredCourses(arr);
         } catch (_) {}
         
         window.location.reload();

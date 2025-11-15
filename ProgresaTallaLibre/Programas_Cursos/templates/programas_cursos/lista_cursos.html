@@ -620,6 +620,32 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
+    const STORAGE_KEY = "{{ storage_key|default:'cursos_inscritos'|escapejs }}";
+    const LEGACY_KEY = "cursos_inscritos";
+
+    function readStoredCourses(key) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (_) {
+            return [];
+        }
+    }
+
+    function persistInscritos() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(inscritos));
+    }
+
+    if (STORAGE_KEY !== LEGACY_KEY) {
+        const legacyCourses = readStoredCourses(LEGACY_KEY);
+        if (!localStorage.getItem(STORAGE_KEY) && legacyCourses.length) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(legacyCourses));
+        }
+        localStorage.removeItem(LEGACY_KEY);
+    }
+
     // Datos de cursos
     const cursosData = {
         'presupuesto-personal': {
@@ -665,7 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Cargar inscritos desde localStorage
-    let inscritos = JSON.parse(localStorage.getItem("cursos_inscritos")) || [];
+    let inscritos = readStoredCourses(STORAGE_KEY);
 
     // Sincronizar localStorage -> backend para mantener coherencia
     (async function syncLocalToServer() {
@@ -727,7 +753,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     inscribirCursoBackend(key)
                         .then(() => {
                             inscritos.push(key);
-                            localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+                            persistInscritos();
                             actualizarBotones();
                         })
                         .catch(() => {
@@ -770,7 +796,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inscribirCursoBackend(key)
                 .then(() => {
                     inscritos.push(key);
-                    localStorage.setItem("cursos_inscritos", JSON.stringify(inscritos));
+                    persistInscritos();
                     actualizarBotones();
                 })
                 .catch(() => {

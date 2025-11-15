@@ -46,8 +46,10 @@ def lista_cursos(request):
     for curso in cursos:
         curso.esta_inscrito = curso.id in cursos_inscritos
 
+    storage_key = f"cursos_inscritos_usuario_{request.user.id}"
     context = {
-        'cursos': cursos  # pasamos TODOS los cursos, no solo uno
+        'cursos': cursos,
+        'storage_key': storage_key,
     }
     return render(request, "Programas_Cursos/lista_cursos.html", context)
 
