@@ -507,20 +507,22 @@
     </div>
     
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-left">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <a href="{% url 'usuarios:perfil' %}" class="logo-link">
                 <div class="logo-container">
                     <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=100&h=100&fit=crop" alt="Logo Progresa Libre">
                 </div>
-                <h1 class="page-title">Cursos</h1>
-            </div>
-            <a href="{% url 'usuarios:perfil' %}" class="perfil-btn">
-                <img src="https://i.imgur.com/exit-icon.png" alt="Perfil" class="perfil-icon">
-                <span>Al Perfil</span>
             </a>
+            <h1 class="page-title">Cursos</h1>
         </div>
-        
+
+        <a href="{% url 'usuarios:perfil' %}" class="perfil-btn">
+            <img src="https://i.imgur.com/exit-icon.png" alt="Perfil" class="perfil-icon">
+            <span>Al Perfil</span>
+        </a>
+    </div>
         <!-- Grid de Cursos -->
         <div class="cursos-grid">
             <!-- Curso 1: Presupuesto Personal -->
