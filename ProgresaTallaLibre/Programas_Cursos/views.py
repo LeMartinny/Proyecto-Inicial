@@ -4,6 +4,9 @@ from .models import Curso, Inscripcion
 from django.shortcuts import render
 from django.shortcuts import redirect
 
+def evaluacion_inflacion(request):
+    return render(request, 'programas_cursos/evaluaciones_inflacion.html')
+
 @login_required
 def lista_cursos(request):
     """

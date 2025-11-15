@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1: Conceptos Básicos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #254E70 0%, #FFE0B5 50%, #8A6552 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Pantalla de inicio */
+        .start-screen {
+            min-height: 80vh;
+        }
+
+        .start-screen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .start-card {
+            background: linear-gradient(to bottom right, #fef3c7, #fef3c7);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            border: 4px solid #78350f;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .start-card h1 {
+            color: #78350f;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .start-card .description {
+            color: #92400e;
+            font-size: 1.3rem;
+            margin-bottom: 35px;
+        }
+
+        .info-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 35px;
+            border: 3px solid #b45309;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #78350f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-detail {
+            color: #92400e;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 3px solid #fde68a;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .info-detail strong {
+            color: #78350f;
+        }
+
+        .btn-start {
+            width: 100%;
+            background: linear-gradient(to right, #b45309, #78350f);
+            color: white;
+            border: none;
+            padding: 22px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Pantalla del quiz */
+        .quiz-header {
+            background: linear-gradient(to right, #78350f, #b45309);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .timer.warning {
+            color: #fca5a5;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .question-counter {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            background: #92400e;
+            height: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(to right, #fde047, #facc15);
+            height: 100%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(253, 224, 71, 0.5);
+        }
+
+        /* Tarjeta de pregunta */
+        .question-card {
+            background: linear-gradient(to bottom right, #fef3c7, #fef3c7);
+            border-radius: 20px;
+            padding: 45px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            border: 4px solid #78350f;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .difficulty-easy {
+            background: #bbf7d0;
+            color: #166534;
+        }
+
+        .difficulty-medium {
+            background: #fef08a;
+            color: #854d0e;
+        }
+
+        .difficulty-hard {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .question-text {
+            color: #78350f;
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .options {
+            margin-bottom: 35px;
+        }
+
+        .option {
+            background: white;
+            border: 3px solid #b45309;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .option:hover {
+            border-color: #78350f;
+            background: #fef3c7;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option.selected {
+            background: #b45309;
+            color: white;
+            border-color: #78350f;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(1.02);
+        }
+
+        .option-letter {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #fde68a;
+            color: #78350f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter {
+            background: white;
+            color: #78350f;
+        }
+
+        .option-text {
+            font-size: 1.2rem;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        /* Botones de navegación */
+        .navigation {
+            display: flex;
+            gap: 18px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-prev {
+            background: #d97706;
+            color: white;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn-prev:hover {
+            background: #b45309;
+            transform: scale(1.02);
+        }
+
+        .btn-next {
+            background: linear-gradient(to right, #b45309, #78350f);
+            color: white;
+            box-shadow: 0 4px 15px rgba(120, 53, 15, 0.3);
+        }
+
+        .btn-next:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-finish {
+            background: linear-gradient(to right, #16a34a, #15803d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-finish:hover {
+            transform: scale(1.02);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .answers-info {
+            text-align: center;
+            color: #92400e;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 3px solid #fde68a;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Pantalla de resultados */
+        .results-screen {
+            min-height: 80vh;
+        }
+
+        .results-screen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-card {
+            background: linear-gradient(to bottom right, #fef3c7, #fef3c7);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            border: 4px solid #78350f;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .icon-result {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: bounceIn 0.8s;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .icon-trophy {
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
+        }
+
+        .results-title {
+            color: #78350f;
+            font-size: 3rem;
+            margin-bottom: 35px;
+            font-weight: 800;
+        }
+
+        .score-box {
+            background: white;
+            border-radius: 18px;
+            padding: 45px;
+            margin-bottom: 35px;
+            border: 3px solid #b45309;
+        }
+
+        .score-number {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .score-pass {
+            color: #059669;
+        }
+
+        .score-fail {
+            color: #dc2626;
+        }
+
+        .score-label {
+            font-size: 1.5rem;
+            color: #92400e;
+            margin-bottom: 35px;
+            font-weight: 600;
+        }
+
+        .score-details {
+            padding-top: 30px;
+            border-top: 3px solid #fde68a;
+        }
+
+        .detail-item {
+            color: #78350f;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .btn-return {
+            width: 100%;
+            background: linear-gradient(to right, #b45309, #78350f);
+            color: white;
+            border: none;
+            padding: 22px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-return:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .start-card h1, .results-title {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1.3rem;
+            }
+
+            .option-text {
+                font-size: 1rem;
+            }
+
+            .start-card, .question-card, .results-card {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de inicio -->
+        <div id="startScreen" class="screen active start-screen">
+            <div class="start-card">
+                <h1>Quiz 1: Conceptos Básicos</h1>
+                <p class="description">Definición de inflación y conceptos fundamentales</p>
+                
+                <div class="info-box">
+                    <div class="info-row">
+                        <span class="info-label">⏱️ 15 minutos</span>
+                        <span class="info-label">📝 10 preguntas</span>
+                    </div>
+                    <div class="info-detail">
+                        <strong>Nota mínima de aprobación: 70%</strong><br>
+                        Las preguntas tienen diferentes niveles de dificultad. Lee cuidadosamente cada una.
+                    </div>
+                </div>
+
+                <button class="btn-start" onclick="startQuiz()">Iniciar Quiz</button>
+            </div>
+        </div>
+
+        <!-- Pantalla del quiz -->
+        <div id="quizScreen" class="screen">
+            <div class="quiz-header">
+                <div class="header-content">
+                    <div class="timer" id="timer">
+                        ⏰ <span id="timerDisplay">15:00</span>
+                    </div>
+                    <div class="question-counter" id="questionCounter">
+                        Pregunta 1 de 10
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div id="difficultyBadge" class="difficulty-badge"></div>
+                <h2 class="question-text" id="questionText"></h2>
+
+                <div class="options" id="optionsContainer"></div>
+
+                <div class="navigation">
+                    <button class="btn btn-prev" id="btnPrev" onclick="previousQuestion()" style="display: none;">
+                        Anterior
+                    </button>
+                    <button class="btn btn-next" id="btnNext" onclick="nextQuestion()" disabled>
+                        Siguiente
+                    </button>
+                    <button class="btn btn-finish" id="btnFinish" onclick="finishQuiz()" style="display: none;" disabled>
+                        ✓ Finalizar Quiz
+                    </button>
+                </div>
+
+                <div class="answers-info" id="answersInfo">
+                    Preguntas respondidas: 0 de 10
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de resultados -->
+        <div id="resultsScreen" class="screen results-screen">
+            <div class="results-card">
+                <div id="resultIcon" class="icon-result"></div>
+                <h2 class="results-title" id="resultTitle"></h2>
+
+                <div class="score-box">
+                    <div class="score-number" id="scoreNumber"></div>
+                    <div class="score-label" id="scoreLabel"></div>
+
+                    <div class="score-details">
+                        <div class="detail-item" id="correctAnswers"></div>
+                        <div class="detail-item">Nota mínima requerida: 70%</div>
+                    </div>
+                </div>
+
+                <button class="btn-return" onclick="returnToMain()">
+                    ← Volver al Menú Principal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quiz = {
+            title: "Quiz 1: Conceptos Básicos",
+            totalQuestions: 10,
+            duration: 900,
+            passingScore: 70,
+            questions: [
+                {
+                    question: "¿Qué es la inflación?",
+                    options: [
+                        "Aumento sostenido y generalizado del nivel de precios",
+                        "Disminución del poder adquisitivo",
+                        "Aumento de la producción económica",
+                        "Reducción de la oferta monetaria"
+                    ],
+                    correct: 0,
+                    difficulty: "Fácil"
+                },
+                {
+                    question: "El Índice de Precios al Consumidor (IPC) mide:",
+                    options: [
+                        "La producción industrial total",
+                        "Los cambios en el costo de una canasta fija de bienes y servicios",
+                        "El nivel de empleo en la economía",
+                        "Las exportaciones netas del país"
+                    ],
+                    correct: 1,
+                    difficulty: "Fácil"
+                },
+                {
+                    question: "La deflación se caracteriza por:",
+                    options: [
+                        "Aumento generalizado de precios",
+                        "Disminución sostenida del nivel de precios",
+                        "Estabilidad absoluta de precios",
+                        "Aumento de la demanda agregada"
+                    ],
+                    correct: 1,
+                    difficulty: "Media"
+                },
+                {
+                    question: "¿Qué representa la 'inflación subyacente' o 'core inflation'?",
+                    options: [
+                        "La inflación total sin excepciones",
+                        "Solo la inflación de alimentos",
+                        "La inflación excluyendo alimentos y energía por su volatilidad",
+                        "La inflación promedio histórica"
+                    ],
+                    correct: 2,
+                    difficulty: "Media"
+                },
+                {
+                    question: "La estanflación es un fenómeno económico que combina:",
+                    options: [
+                        "Inflación alta y crecimiento económico robusto",
+                        "Deflación y desempleo bajo",
+                        "Inflación elevada con estancamiento económico y alto desempleo",
+                        "Estabilidad de precios con expansión económica"
+                    ],
+                    correct: 2,
+                    difficulty: "Media"
+                },
+                {
+                    question: "Según la teoría cuantitativa del dinero (ecuación de Fisher: MV = PQ), si la velocidad del dinero (V) y la producción (Q) se mantienen constantes, ¿qué ocurre con el nivel de precios (P) si se duplica la oferta monetaria (M)?",
+                    options: [
+                        "Se reduce a la mitad",
+                        "Permanece constante",
+                        "Se duplica",
+                        "Aumenta cuatro veces"
+                    ],
+                    correct: 2,
+                    difficulty: "Difícil"
+                },
+                {
+                    question: "El 'efecto Cantillon' en economía monetaria se refiere a:",
+                    options: [
+                        "El impacto uniforme del dinero en todos los sectores",
+                        "La distribución desigual de los efectos de cambios en la oferta monetaria según quién recibe el dinero primero",
+                        "La neutralidad del dinero a corto plazo",
+                        "El control directo de precios por el gobierno"
+                    ],
+                    correct: 1,
+                    difficulty: "Difícil"
+                },
+                {
+                    question: "¿Qué tipo de inflación se produce cuando el aumento de precios se origina por un incremento en los costos de producción?",
+                    options: [
+                        "Inflación de demanda",
+                        "Inflación importada",
+                        "Inflación de costos (cost-push)",
+                        "Inflación inercial"
+                    ],
+                    correct: 2,
+                    difficulty: "Media"
+                },
+                {
+                    question: "La hiperinflación se define técnicamente como una inflación que supera:",
+                    options: [
+                        "10% anual",
+                        "50% mensual",
+                        "100% anual",
+                        "20% trimestral"
+                    ],
+                    correct: 1,
+                    difficulty: "Difícil"
+                },
+                {
+                    question: "El concepto de 'ilusión monetaria' describe:",
+                    options: [
+                        "La falsificación de billetes",
+                        "El ahorro excesivo en efectivo",
+                        "La tendencia de las personas a pensar en términos nominales sin ajustar por inflación",
+                        "El uso de múltiples monedas simultáneamente"
+                    ],
+                    correct: 2,
+                    difficulty: "Difícil"
+                }
+            ]
+        };
+
+        let currentQuestion = 0;
+        let answers = {};
+        let timeLeft = quiz.duration;
+        let timerInterval = null;
+
+        function startQuiz() {
+            document.getElementById('startScreen').classList.remove('active');
+            document.getElementById('quizScreen').classList.add('active');
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+
+            const timerElement = document.getElementById('timer');
+            if (timeLeft < 60) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.remove('warning');
+            }
+        }
+
+        function loadQuestion() {
+            const q = quiz.questions[currentQuestion];
+            
+            document.getElementById('questionCounter').textContent = 
+                `Pregunta ${currentQuestion + 1} de ${quiz.totalQuestions}`;
+            
+            const progress = ((currentQuestion + 1) / quiz.totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            const badge = document.getElementById('difficultyBadge');
+            badge.textContent = q.difficulty;
+            badge.className = 'difficulty-badge difficulty-' + 
+                (q.difficulty === 'Fácil' ? 'easy' : q.difficulty === 'Media' ? 'medium' : 'hard');
+            
+            document.getElementById('questionText').textContent = q.question;
+            
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                if (answers[currentQuestion] === index) {
+                    div.classList.add('selected');
+                }
+                div.onclick = () => selectOption(index);
+                
+                const letter = String.fromCharCode(65 + index);
+                div.innerHTML = `
+                    <div class="option-letter">${letter}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                container.appendChild(div);
+            });
+            
+            updateButtons();
+            updateAnswersInfo();
+        }
+
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            loadQuestion();
+        }
+
+        function updateButtons() {
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const btnFinish = document.getElementById('btnFinish');
+            
+            btnPrev.style.display = currentQuestion > 0 ? 'block' : 'none';
+            
+            const isAnswered = answers[currentQuestion] !== undefined;
+            
+            if (currentQuestion < quiz.totalQuestions - 1) {
+                btnNext.style.display = 'block';
+                btnFinish.style.display = 'none';
+                btnNext.disabled = !isAnswered;
+            } else {
+                btnNext.style.display = 'none';
+                btnFinish.style.display = 'block';
+                const allAnswered = Object.keys(answers).length === quiz.totalQuestions;
+                btnFinish.disabled = !allAnswered;
+            }
+        }
+
+        function updateAnswersInfo() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answersInfo').textContent = 
+                `Preguntas respondidas: ${answered} de ${quiz.totalQuestions}`;
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quiz.totalQuestions - 1 && answers[currentQuestion] !== undefined) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            
+            let correctAnswers = 0;
+            quiz.questions.forEach((q, index) => {
+                if (answers[index] === q.correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            const score = Math.round((correctAnswers / quiz.totalQuestions) * 100);
+            const passed = score >= quiz.passingScore;
+            
+            localStorage.setItem('quiz1_score', score.toString());
+            localStorage.setItem('quiz1_date', new Date().toISOString());
+            localStorage.setItem('quiz1_passed', passed ? 'true' : 'false');
+            localStorage.setItem('quiz1_correct', correctAnswers.toString());
+            localStorage.setItem('quiz1_total', quiz.totalQuestions.toString());
+            
+            showResults(score, correctAnswers, passed);
+        }
+
+        function showResults(score, correctAnswers, passed) {
+            document.getElementById('quizScreen').classList.remove('active');
+            document.getElementById('resultsScreen').classList.add('active');
+            
+            const iconDiv = document.getElementById('resultIcon');
+            if (passed) {
+                iconDiv.innerHTML = '<span class="icon-trophy">🏆</span>';
+            } else {
+                iconDiv.innerHTML = '❌';
+            }
+            
+            document.getElementById('resultTitle').textContent = 
+                passed ? '¡Felicitaciones!' : 'Sigue intentando';
+            
+            const scoreNum = document.getElementById('scoreNumber');
+            scoreNum.textContent = score + '%';
+            scoreNum.className = 'score-number ' + (passed ? 'score-pass' : 'score-fail');
+            
+            document.getElementById('scoreLabel').textContent = 
+                passed ? 'Has aprobado el quiz' : 'No has alcanzado la nota mínima';
+            
+            document.getElementById('correctAnswers').textContent = 
+                `Respuestas correctas: ${correctAnswers} de ${quiz.totalQuestions}`;
+        }
+
+        function returnToMain() {
+            window.history.back();
+        }
+
+        // Función para cargar y mostrar resultados de quizzes
+        function loadQuizResults() {
+            // Quiz 1
+            const quiz1Score = localStorage.getItem('quiz1_score');
+            const quiz1Passed = localStorage.getItem('quiz1_passed') === 'true';
+            
+            if (quiz1Score !== null) {
+                displayQuizResult(1, quiz1Score, quiz1Passed);
+            }
+            
+            // Puedes agregar más quizzes aquí siguiendo el mismo patrón
+            // Quiz 2, 3, etc.
+        }
+
+        function displayQuizResult(quizNumber, score, passed) {
+            const quizCard = document.querySelector(`[data-quiz-id="${quizNumber}"]`);
+            if (!quizCard) return;
+            
+            // Buscar si ya existe un contenedor de resultado
+            let resultDiv = quizCard.querySelector('.quiz-result');
+            
+            if (!resultDiv) {
+                // Crear el contenedor de resultado
+                resultDiv = document.createElement('div');
+                resultDiv.className = 'quiz-result';
+                quizCard.appendChild(resultDiv);
+            }
+            
+            // Actualizar clase según aprobado/reprobado
+            resultDiv.className = 'quiz-result ' + (passed ? 'passed' : 'failed');
+            
+            // Actualizar contenido
+            resultDiv.innerHTML = `
+                <span class="result-icon">${passed ? '✓' : '✗'}</span>
+                <div class="result-score">
+                    <span class="percentage">${score}%</span>
+                    <span class="label">${passed ? 'Aprobado' : 'Reprobado'}</span>
+                </div>
+            `;
+        }
+
+        // Escuchar mensajes de las ventanas de quiz
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'quiz_result') {
+                displayQuizResult(event.data.quizId, event.data.score, event.data.passed);
+            }
+        });
+
+        // Cargar resultados al cargar la página
+        window.addEventListener('load', loadQuizResults);
+</script>
+</body>
+</html>

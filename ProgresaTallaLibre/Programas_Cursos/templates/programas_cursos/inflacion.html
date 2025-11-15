@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -253,16 +254,14 @@
         }
 
         .btn-start {
-            background: #D2691E;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color:#D2691E; /* tu color del botón */
             color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1em;
+            text-decoration: none;
+            border-radius: 8px;
             font-weight: 600;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s;
+            text-align: center;
         }
 
         .btn-start:hover {
@@ -475,12 +474,12 @@
                     <li class="doc-item">
                         <h3>📘 Macroeconomía - N. Gregory Mankiw</h3>
                         <p>Capítulos 4-6: Teoría cuantitativa del dinero e inflación</p>
-                        <a href="#" class="doc-link">Ver detalles →</a>
+                        <a href="{% static 'pdf/Macroeconomia__Gregory_Mankiw.pdf' %}" target="_blank" class="doc-link">Descargar PDF →</a>
                     </li>
                     <li class="doc-item">
                         <h3>📗 Economía - Paul Samuelson</h3>
                         <p>Parte III: Macroeconomía moderna y política económica</p>
-                        <a href="#" class="doc-link">Ver detalles →</a>
+                        <a href="#" class="doc-link">Descargar PDF →</a>
                     </li>
                     <li class="doc-item">
                         <h3>📙 Inflación y Estabilidad Macroeconómica - BID</h3>
@@ -490,12 +489,12 @@
                     <li class="doc-item">
                         <h3>📕 Reportes del Banco Central</h3>
                         <p>Informes de política monetaria y análisis de inflación actualizados</p>
-                        <a href="#" class="doc-link">Acceder →</a>
+                        <a href="#" class="doc-link">Descargar PDF →</a>
                     </li>
                     <li class="doc-item">
                         <h3>📰 Artículos Académicos Recomendados</h3>
                         <p>Selección de papers sobre inflación contemporánea y casos de estudio</p>
-                        <a href="#" class="doc-link">Ver lista →</a>
+                        <a href="#" class="doc-link">Descargar PDF →</a>
                     </li>
                 </ul>
             </div>
@@ -510,25 +509,25 @@
                 <div class="exercise-card">
                     <h3>Ejercicio 1: Cálculo del IPC</h3>
                     <p>Dada una canasta de bienes y servicios, calcula la variación del índice de precios al consumidor entre dos períodos.</p>
-                    <button class="btn-start">Comenzar</button>
+                    <a class="btn-start" href="{% static 'pdf/guia_ipc_mejorada.pdf' %}" target="_blank">Ver guía</a>
                 </div>
 
                 <div class="exercise-card">
                     <h3>Ejercicio 2: Inflación y Poder Adquisitivo</h3>
                     <p>Determina cómo afecta una inflación del 5% anual al poder de compra de un salario fijo durante 3 años.</p>
-                    <button class="btn-start">Comenzar</button>
+                    <a class="btn-start" href="{% static 'pdf/guia_ipc_mejorada.pdf' %}" target="_blank">Ver guía</a>
                 </div>
 
                 <div class="exercise-card">
                     <h3>Ejercicio 3: Análisis de Políticas Monetarias</h3>
                     <p>Analiza casos de intervención del banco central y sus efectos en la inflación.</p>
-                    <button class="btn-start">Comenzar</button>
+                     <a class="btn-start" href="{% static 'pdf/guia_ipc_mejorada.pdf' %}" target="_blank">Ver guía</a>
                 </div>
 
                 <div class="exercise-card">
                     <h3>Ejercicio 4: Estudio de Caso - Hiperinflación</h3>
                     <p>Investiga un caso histórico de hiperinflación y sus causas fundamentales.</p>
-                    <button class="btn-start">Comenzar</button>
+                    <a class="btn-start" href="{% static 'pdf/guia_ipc_mejorada.pdf' %}" target="_blank">Ver guía</a>
                 </div>
             </div>
 
@@ -539,32 +538,34 @@
                     <p>Evalúa tu aprendizaje con quizzes por tema y un control final integrador.</p>
                 </div>
 
-                <div class="quiz-card" onclick="startQuiz(1)">
-                    <h3>Quiz 1: Conceptos Básicos</h3>
-                    <p>Definición de inflación y conceptos fundamentales</p>
-                    <p><strong>10 preguntas • 15 minutos</strong></p>
-                    <button class="btn-start">Iniciar Quiz</button>
+                <div class="quiz-card" data-quiz-id="1">
+                    <div class="quiz-info">
+                        <h3>Quiz 1: Conceptos Básicos</h3>
+                        <p>Definición de inflación y conceptos fundamentales</p>
+                        <p><strong>10 preguntas • 15 minutos</strong></p>
+                        <a href="{% url 'cursos:evaluaciones_inflacion' %}" class="btn-start">Iniciar Quiz</a>
+                    </div>
                 </div>
 
                 <div class="quiz-card" onclick="startQuiz(2)">
                     <h3>Quiz 2: Causas y Medición</h3>
                     <p>Factores causales y métodos de medición de la inflación</p>
                     <p><strong>12 preguntas • 20 minutos</strong></p>
-                    <button class="btn-start">Iniciar Quiz</button>
+                    <a href="" class="btn-start">Iniciar Quiz</a>
                 </div>
 
                 <div class="quiz-card" onclick="startQuiz(3)">
                     <h3>Quiz 3: Efectos y Políticas</h3>
                     <p>Consecuencias económicas y políticas antiinflacionarias</p>
                     <p><strong>15 preguntas • 25 minutos</strong></p>
-                    <button class="btn-start">Iniciar Quiz</button>
+                    <a href="" class="btn-start">Iniciar Quiz</a>
                 </div>
 
                 <div class="quiz-card quiz-final" onclick="startQuiz('final')">
                     <h3>🏆 Control Final</h3>
                     <p>Evaluación integradora de todos los contenidos del curso</p>
                     <p><strong>30 preguntas • 45 minutos • Requiere 70% para aprobar</strong></p>
-                    <button class="btn-start">Iniciar Control Final</button>
+                    <a href="" class="btn-start">Iniciar Quiz</a>
                 </div>
             </div>
         </div>
@@ -598,7 +599,7 @@
             1: {
                 title: "¿Qué es la Inflación?",
                 description: "Introducción al concepto de inflación, definición básica y ejemplos cotidianos de cómo afecta tu vida diaria.",
-                h5pURL: "https://progresalibre.h5p.com/content/1292744445782732078/embed",
+                h5pURL: "https://progresalibre.h5p.com/content/TU_CODIGO_AQUI/embed",
                 // 👆 EJEMPLO COMPLETADO - Reemplaza con tu URL real
             },
             2: {
@@ -616,7 +617,7 @@
             4: {
                 title: "Efectos de la Inflación",
                 description: "Impacto en el poder adquisitivo, ahorro, inversión y distribución del ingreso en la economía.",
-                h5pURL: "https://progresalibre.h5p.com/content/TU_CODIGO_AQUI/embed",
+                h5pURL:  "https://progresalibre.h5p.com/content/1292744445782732078/embed"
                 // 👆 REEMPLAZA "TU_CODIGO_AQUI" con el código de tu video H5P
             },
             5: {
@@ -698,10 +699,6 @@
                 closeVideo();
             }
         });
-
-        function startQuiz(quizNumber) {
-            alert(`Iniciando Quiz ${quizNumber}\n\nEste quiz también se puede crear con H5P:\n1. Ve a progresalibre.h5p.com\n2. Selecciona "Question Set"\n3. Agrega tus preguntas\n4. Integra igual que los videos`);
-        }
 
         // Simular progreso del curso
         setTimeout(() => {
