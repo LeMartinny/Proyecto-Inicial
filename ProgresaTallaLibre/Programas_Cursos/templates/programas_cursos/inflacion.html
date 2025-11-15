@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso de Inflación - Plataforma Educativa</title>
+    <title>Curso de Inflación - Progresa Libre</title>
     <style>
         * {
             margin: 0;
@@ -653,11 +653,8 @@
         }
 
         function goToCourses() {
-            if(confirm('¿Deseas salir del curso de Inflación y volver a Mis Cursos?')) {
-                // Descomenta la línea de abajo cuando tengas tu página de cursos
-                // window.location.href = '/mis-cursos.html';
-                alert('Aquí redirigirías a tu página principal de cursos');
-            }
+            window.location.href = "{% url 'usuarios:micursos' %}";
+            
         }
 
         function openLesson(lessonNumber) {

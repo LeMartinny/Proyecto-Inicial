@@ -283,4 +283,9 @@ def mi_cursos(request):
         }
         for ins in inscripciones
     ]
-    return render(request, "usuarios/micursos.html", {'cursos_inscritos': cursos_inscritos})
+    storage_key = f"cursos_inscritos_usuario_{request.user.id}"
+    context = {
+        'cursos_inscritos': cursos_inscritos,
+        'storage_key': storage_key,
+    }
+    return render(request, "usuarios/micursos.html", context)
