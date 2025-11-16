@@ -393,7 +393,61 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+
+        /* Contenedor alineado a la derecha */
+        #quiz1-result {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        /* Tarjeta del resultado */
+        .quiz-result {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-size: 15px;
+            gap: 10px;
+            color: white;
+
+            /* Sombras suaves */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+
+            /* Animación suave al aparecer */
+            opacity: 0;
+            transform: translateY(6px);
+            animation: slideIn 0.25s ease forwards;
+        }
+
+        /* Colores */
+        .quiz-result.passed {
+            background: linear-gradient(135deg, #1ebd6b, #15914e);
+        }
+
+        .quiz-result.failed {
+            background: linear-gradient(135deg, #d63b3b, #9c2222);
+        }
+
+        /* Icono */
+        .quiz-result-icon {
+            font-size: 20px;
+        }
+
+        /* Texto */
+        .quiz-result-text {
+            text-align: right;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+</style>
 </head>
 <body>
     <div class="container">
@@ -544,30 +598,40 @@
                         <p>Definición de inflación y conceptos fundamentales</p>
                         <p><strong>10 preguntas • 15 minutos</strong></p>
                         <a href="{% url 'cursos:evaluaciones_inflacion' %}" class="btn-start">Iniciar Quiz</a>
+                        <div id="quiz1-result" class="quiz-result-container"></div>
                     </div>
+                    <div class="quiz-result" id="result-quiz-1" style="display: none;"></div>
                 </div>
 
-                <div class="quiz-card" onclick="startQuiz(2)">
-                    <h3>Quiz 2: Causas y Medición</h3>
-                    <p>Factores causales y métodos de medición de la inflación</p>
-                    <p><strong>12 preguntas • 20 minutos</strong></p>
-                    <a href="" class="btn-start">Iniciar Quiz</a>
+                <div class="quiz-card" data-quiz-id="2">
+                    <div class="quiz-info">
+                        <h3>Quiz 2: Causas y Medición</h3>
+                        <p>Factores causales y métodos de medición de la inflación</p>
+                        <p><strong>12 preguntas • 20 minutos</strong></p>
+                        <a href="" class="btn-start">Próximamente</a>
+                    </div>
+                    <div class="quiz-result" id="result-quiz-2" style="display: none;"></div>
                 </div>
 
-                <div class="quiz-card" onclick="startQuiz(3)">
-                    <h3>Quiz 3: Efectos y Políticas</h3>
-                    <p>Consecuencias económicas y políticas antiinflacionarias</p>
-                    <p><strong>15 preguntas • 25 minutos</strong></p>
-                    <a href="" class="btn-start">Iniciar Quiz</a>
+                <div class="quiz-card" data-quiz-id="3">
+                    <div class="quiz-info">
+                        <h3>Quiz 3: Efectos y Políticas</h3>
+                        <p>Consecuencias económicas y políticas antiinflacionarias</p>
+                        <p><strong>15 preguntas • 25 minutos</strong></p>
+                        <a href="" class="btn-start">Próximamente</a>
+                    </div>
+                    <div class="quiz-result" id="result-quiz-3" style="display: none;"></div>
                 </div>
 
-                <div class="quiz-card quiz-final" onclick="startQuiz('final')">
-                    <h3>🏆 Control Final</h3>
-                    <p>Evaluación integradora de todos los contenidos del curso</p>
-                    <p><strong>30 preguntas • 45 minutos • Requiere 70% para aprobar</strong></p>
-                    <a href="" class="btn-start">Iniciar Quiz</a>
+                <div class="quiz-card quiz-final" data-quiz-id="final">
+                    <div class="quiz-info">
+                        <h3>🏆 Control Final</h3>
+                        <p>Evaluación integradora de todos los contenidos del curso</p>
+                        <p><strong>30 preguntas • 45 minutos • Requiere 70% para aprobar</strong></p>
+                        <a href="" class="btn-start">Próximamente</a>
+                    </div>
+                    <div class="quiz-result" id="result-quiz-final" style="display: none;"></div>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -701,6 +765,66 @@
         setTimeout(() => {
             document.querySelector('.progress-fill').style.width = '16%';
         }, 500);
+
+        function showResults(score, correctAnswers, passed) {
+            document.getElementById('quizScreen').classList.remove('active');
+            document.getElementById('resultsScreen').classList.add('active');
+            
+            const iconDiv = document.getElementById('resultIcon');
+            if (passed) {
+                iconDiv.innerHTML = '<span class="icon-trophy">🏆</span>';
+            } else {
+                iconDiv.innerHTML = '❌';
+            }
+            
+            document.getElementById('resultTitle').textContent = 
+                passed ? '¡Felicitaciones!' : 'Sigue intentando';
+            
+            const scoreNum = document.getElementById('scoreNumber');
+            scoreNum.textContent = score + '%';
+            scoreNum.className = 'score-number ' + (passed ? 'score-pass' : 'score-fail');
+            
+            document.getElementById('scoreLabel').textContent = 
+                passed ? 'Has aprobado el quiz' : 'No has alcanzado la nota mínima';
+            
+            document.getElementById('correctAnswers').textContent = 
+                `Respuestas correctas: ${correctAnswers} de ${quiz.totalQuestions}`;
+            
+            // Enviar mensaje al padre (si está en iframe)
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'quiz_completed',
+                    quizId: 1,
+                    score: score,
+                    passed: passed,
+                    correctAnswers: correctAnswers,
+                    totalQuestions: quiz.totalQuestions
+                }, '*');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const score = localStorage.getItem('quiz1_score');
+            const passed = localStorage.getItem('quiz1_passed') === 'true';
+            const correct = localStorage.getItem('quiz1_correct');
+            const total = localStorage.getItem('quiz1_total');
+
+            const container = document.getElementById("quiz1-result");
+
+            // Si NO hay resultados, no mostramos nada
+            if (!score) return;
+
+            container.innerHTML = `
+                <div class="quiz-result ${passed ? 'passed' : 'failed'}">
+                    <span class="quiz-result-icon">${passed ? '✓' : '✗'}</span>
+                    <div class="quiz-result-text">
+                        <strong>${passed ? 'Aprobado' : 'Reprobado'}</strong><br>
+                        ${score}% — ${correct} de ${total} correctas
+                    </div>
+                </div>
+            `;
+
+        });        
     </script>
 </body>
 </html>

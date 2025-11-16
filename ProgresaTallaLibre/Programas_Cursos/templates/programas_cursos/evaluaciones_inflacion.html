@@ -804,25 +804,42 @@
             }
         }
 
+        function saveResultsLocally(score, correctAnswers) {
+            const results = {
+                quizTitle: quiz.title,
+                score: score,
+                correctAnswers: correctAnswers,
+                totalQuestions: quiz.totalQuestions,
+                date: new Date().toLocaleString(),
+                answers: answers
+            };
+
+            localStorage.setItem("quiz1_results", JSON.stringify(results));
+        }
+
         function finishQuiz() {
             clearInterval(timerInterval);
-            
+
             let correctAnswers = 0;
             quiz.questions.forEach((q, index) => {
                 if (answers[index] === q.correct) {
                     correctAnswers++;
                 }
             });
-            
+
             const score = Math.round((correctAnswers / quiz.totalQuestions) * 100);
             const passed = score >= quiz.passingScore;
-            
+
+            // Guardar resultados para la página principal
             localStorage.setItem('quiz1_score', score.toString());
             localStorage.setItem('quiz1_date', new Date().toISOString());
             localStorage.setItem('quiz1_passed', passed ? 'true' : 'false');
             localStorage.setItem('quiz1_correct', correctAnswers.toString());
             localStorage.setItem('quiz1_total', quiz.totalQuestions.toString());
-            
+
+            // Guardado del objeto completo (ARREGLADO)
+            saveResultsLocally(score, correctAnswers);
+
             showResults(score, correctAnswers, passed);
         }
 
@@ -895,16 +912,6 @@
                 </div>
             `;
         }
-
-        // Escuchar mensajes de las ventanas de quiz
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'quiz_result') {
-                displayQuizResult(event.data.quizId, event.data.score, event.data.passed);
-            }
-        });
-
-        // Cargar resultados al cargar la página
-        window.addEventListener('load', loadQuizResults);
 </script>
 </body>
 </html>
